@@ -1,0 +1,3198 @@
+<meta charset="utf-8">
+<title>Intro to Python Workbook</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&family=Nunito:wght@400;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --rule-h:29px;
+    --bg:#EEF1FC;
+    --paper:#FFFFFF;
+    --paper-line:hsla(228,75%,58%,0.16);
+    --ink:#332E4D;
+    --ink-dim:#726E93;
+    --card:#F7F7FF;
+    --line:hsla(240,25%,45%,0.14);
+    --code-bg:#2B2755;
+    --code-text:#ECE9FF;
+    --code-dim:#9992C9;
+    --shadow:hsla(240,45%,35%,0.16);
+
+    --brand:#5D78E8;
+    --brand-2:#9B7CEA;
+    --brand-deep:#4657B8;
+
+    --box-def-k:#5B7FE0;     --box-def-bg:#EAF0FF;    --box-def-t:#fff;
+    --box-mistake-k:#E0688C; --box-mistake-bg:#FFE9F0; --box-mistake-t:#fff;
+    --box-remember-k:#DB9C22; --box-remember-bg:#FFF4DC; --box-remember-t:#3E2B00;
+    --box-practice-k:#38B07C; --box-practice-bg:#E4FAF0; --box-practice-t:#fff;
+    --box-analogy-k:#9370E5; --box-analogy-bg:#F1EBFF;  --box-analogy-t:#fff;
+    --box-predict-k:#2FAEC2; --box-predict-bg:#E4F8FA;  --box-predict-t:#fff;
+    --box-use-k:#E39355;     --box-use-bg:#FFEFE2;      --box-use-t:#3E2400;
+  }
+  *{box-sizing:border-box;}
+  body{
+    background:var(--bg);
+    color:var(--ink);
+    font-family:'Nunito',-apple-system,BlinkMacSystemFont,sans-serif;
+    line-height:1.55;
+  }
+  h1,h2,h3{font-family:'Baloo 2',-apple-system,sans-serif; text-wrap:balance; margin:0;}
+  code,pre,.mono{font-family:'JetBrains Mono','SF Mono',Consolas,monospace;}
+  a{color:inherit;}
+
+  /* ---------- TOP NAV ---------- */
+  #topnav{
+    position:sticky; top:0; z-index:50;
+    display:flex; align-items:center; gap:14px;
+    background:linear-gradient(120deg, var(--brand), var(--brand-2));
+    padding:11px 16px;
+    box-shadow:0 4px 16px var(--shadow);
+  }
+  #topnav .brand{
+    display:flex; align-items:center; gap:9px;
+    font-family:'Baloo 2',sans-serif; font-weight:700; font-size:16px;
+    white-space:nowrap; flex:0 0 auto; color:#fff;
+  }
+  #topnav .brand .mark{
+    display:inline-flex; align-items:center; justify-content:center;
+    width:28px; height:28px; border-radius:9px;
+    background:rgba(255,255,255,0.22); border:1px solid rgba(255,255,255,0.4);
+    font-family:'JetBrains Mono',monospace; font-weight:700; font-size:12px; color:#fff;
+  }
+  #topnav .brand b{font-weight:800; letter-spacing:.01em;}
+  #navchips{
+    display:flex; gap:6px; overflow-x:auto; flex:1 1 auto;
+    scrollbar-width:thin;
+  }
+  #navchips a{
+    flex:0 0 auto; display:inline-flex; align-items:center; gap:6px;
+    font-family:'Nunito',sans-serif; font-size:11.5px; font-weight:800;
+    letter-spacing:.01em; text-decoration:none;
+    padding:6px 12px; border-radius:20px; border:1px solid rgba(255,255,255,0.4);
+    color:rgba(255,255,255,0.95); white-space:nowrap; background:rgba(255,255,255,0.10);
+  }
+  #navchips a:hover{color:#fff; border-color:#fff; background:rgba(255,255,255,0.22);}
+  #navchips i{width:8px; height:8px; border-radius:50%; display:inline-block; background:var(--dot); box-shadow:0 0 0 2px rgba(255,255,255,0.55);}
+  #printbtn{
+    flex:0 0 auto; font-family:'Nunito',sans-serif; font-weight:800; font-size:12.5px;
+    background:#fff; color:var(--brand-deep); border:none; border-radius:20px;
+    padding:9px 16px; cursor:pointer;
+  }
+  #printbtn:hover{filter:brightness(1.05);}
+
+  main{max-width:820px; margin:0 auto; padding:36px 16px 90px;}
+
+  /* ---------- PAGE (lined sheet) ---------- */
+  .page{
+    position:relative;
+    background-color:var(--paper);
+    background-image:linear-gradient(var(--paper-line) 1.5px, transparent 1.5px);
+    background-size:100% var(--rule-h);
+    background-position:0 6px;
+    border-radius:22px;
+    box-shadow:0 14px 30px -16px var(--shadow), 0 3px 8px -2px var(--shadow);
+    padding:32px 34px 38px;
+    margin:0 0 28px;
+    overflow:hidden;
+  }
+  .page::after{
+    content:attr(data-tab);
+    position:absolute; top:22px; right:-1px;
+    font-family:'Nunito',sans-serif; font-weight:800; font-size:10.5px;
+    letter-spacing:.04em; text-transform:uppercase; color:var(--accent-strong);
+    background:var(--accent-soft); padding:7px 6px 7px 10px;
+    border-radius:10px 0 0 10px;
+    writing-mode:vertical-rl; text-orientation:mixed;
+  }
+  .pagehead{display:flex; align-items:center; gap:10px; margin-bottom:4px;}
+  .pagenum{
+    font-family:'Nunito',sans-serif; font-weight:800; font-size:11.5px;
+    color:var(--accent-strong); background:var(--accent-soft); padding:4px 10px; border-radius:20px;
+  }
+  .kicker{
+    font-family:'Nunito',sans-serif; font-weight:800; font-size:11.5px;
+    letter-spacing:.03em; text-transform:uppercase; color:var(--accent-strong);
+  }
+  .pagetitle{font-family:'Baloo 2',sans-serif; font-size:27px; font-weight:700; margin:6px 0 8px; color:var(--ink); padding-right:20px;}
+  .pagetitle::after{content:""; display:block; width:50px; height:5px; margin-top:8px; border-radius:3px; background:var(--accent-line);}
+  .lede{color:var(--ink-dim); font-size:14.5px; margin:14px 0 16px; max-width:62ch;}
+  .page p{margin:0 0 10px; max-width:66ch; line-height:var(--rule-h);}
+  .page h3.sub{font-family:'Baloo 2',sans-serif; font-size:16px; font-weight:600; margin:16px 0 6px; color:var(--accent-strong);}
+
+  /* ---------- BOXES ---------- */
+  .box{
+    background:var(--kbg); border:none; border-left:5px solid var(--k);
+    border-radius:16px; padding:14px 18px 16px; margin:16px 0;
+  }
+  .box p{line-height:1.6;}
+  .chip{
+    display:inline-block; font-family:'Nunito',sans-serif; font-weight:800; font-size:10.5px;
+    letter-spacing:.03em; text-transform:uppercase; color:var(--kt); background:var(--k);
+    padding:4px 11px; border-radius:20px; margin-bottom:9px;
+  }
+  .box p:last-child{margin-bottom:0;}
+  .box.def{--k:var(--box-def-k); --kbg:var(--box-def-bg); --kt:var(--box-def-t);}
+  .box.mistake{--k:var(--box-mistake-k); --kbg:var(--box-mistake-bg); --kt:var(--box-mistake-t);}
+  .box.remember{--k:var(--box-remember-k); --kbg:var(--box-remember-bg); --kt:var(--box-remember-t);}
+  .box.practice{--k:var(--box-practice-k); --kbg:var(--box-practice-bg); --kt:var(--box-practice-t);}
+  .box.analogy{--k:var(--box-analogy-k); --kbg:var(--box-analogy-bg); --kt:var(--box-analogy-t);}
+  .box.predict{--k:var(--box-predict-k); --kbg:var(--box-predict-bg); --kt:var(--box-predict-t);}
+  .box.use{--k:var(--box-use-k); --kbg:var(--box-use-bg); --kt:var(--box-use-t);}
+
+  /* ---------- CODE ---------- */
+  pre.code, code.inline{
+    font-family:'JetBrains Mono',monospace;
+  }
+  pre.code{
+    background:var(--code-bg); color:var(--code-text);
+    border-radius:14px; padding:14px 16px; font-size:13px; line-height:1.55;
+    overflow-x:auto; margin:10px 0;
+  }
+  pre.code .c{color:var(--code-dim); font-style:italic;}
+  code.inline{
+    background:var(--card); border:1px solid var(--line); border-radius:6px;
+    padding:1px 7px; font-size:.92em;
+  }
+
+  /* ---------- DIAGRAM / ASCII ---------- */
+  .diagram{
+    text-align:center; margin:14px 0; overflow-x:auto;
+  }
+  .diagram pre{
+    display:inline-block; text-align:left; font-family:'JetBrains Mono',monospace;
+    font-size:12.5px; line-height:1.5; background:var(--card); border:1.5px dashed var(--line);
+    border-radius:14px; padding:14px 20px; color:var(--ink); margin:0;
+  }
+  .diagram.center pre{text-align:center;}
+  .arrow{text-align:center; font-size:20px; color:var(--accent-strong); margin:2px 0; font-family:'JetBrains Mono',monospace;}
+
+  /* ---------- TABLES ---------- */
+  table.chart{width:100%; border-collapse:separate; border-spacing:0; margin:14px 0; font-size:13.5px; border-radius:12px; overflow:hidden; border:1px solid var(--line);}
+  table.chart th{
+    background:var(--accent-strong); color:#fff; text-align:left; padding:8px 12px;
+    font-family:'Nunito',sans-serif; font-size:11px; font-weight:800; letter-spacing:.03em; text-transform:uppercase;
+  }
+  table.chart td{padding:8px 12px; border-top:1px solid var(--line); vertical-align:top; background:var(--paper);}
+  table.chart tr:nth-child(even) td{background:var(--card);}
+  table.chart td code.inline{white-space:nowrap;}
+
+  /* ---------- FORM FIELDS (type-in & saved) ---------- */
+  input.fillin, textarea.fillin{
+    font-family:'Nunito',sans-serif; font-size:14.5px; font-weight:700; color:var(--ink);
+    background:var(--paper); border:2px solid hsla(230,55%,75%,0.55);
+    border-radius:10px; padding:5px 11px; min-width:120px;
+    outline:none; box-shadow:inset 0 1px 3px hsla(240,40%,30%,0.06);
+    transition:border-color .15s, box-shadow .15s; vertical-align:middle;
+  }
+  input.fillin:focus, textarea.fillin:focus{
+    border-color:var(--brand); box-shadow:0 0 0 3px hsla(232,85%,68%,0.25);
+  }
+  textarea.fillin{display:block; width:100%; resize:vertical; line-height:1.5; font-weight:600;}
+  textarea.fillin-block{min-height:2.4em;}
+
+  /* ---------- MISC ---------- */
+  .two-col{display:grid; grid-template-columns:1fr 1fr; gap:14px;}
+  .drawbox{
+    border:2px dashed var(--accent-line); border-radius:16px; margin:14px 0;
+    background-color:var(--card); position:relative; padding:26px 12px 12px;
+  }
+  .drawbox .label{position:absolute; top:8px; left:12px; font-family:'Nunito',sans-serif; font-weight:800; font-size:10.5px; text-transform:uppercase; letter-spacing:.04em; color:var(--ink-dim);}
+  .drawbox textarea.fillin{background:transparent; border:none; box-shadow:none; min-height:90px; font-weight:500; padding:2px 4px;}
+  .drawbox textarea.fillin:focus{box-shadow:none;}
+  ul.tight, ol.tight{margin:6px 0 10px; padding-left:22px;}
+  ul.tight li, ol.tight li{margin-bottom:4px;}
+  .badge-list{display:flex; flex-wrap:wrap; gap:8px; margin:10px 0;}
+  .badge-list span{background:var(--card); border:1px solid var(--line); border-radius:20px; padding:5px 13px; font-size:12.5px; font-weight:600;}
+  hr.rule{border:none; border-top:2px dashed var(--line); margin:18px 0;}
+  .stamp{
+    display:inline-block; border:2.5px solid var(--accent-strong); color:var(--accent-strong); border-radius:14px;
+    padding:6px 14px; font-family:'Baloo 2',sans-serif; font-weight:700; font-size:12px;
+    letter-spacing:.02em; text-transform:uppercase; transform:rotate(-2deg);
+  }
+  .toc-grid{display:grid; grid-template-columns:1fr 1fr; gap:0 28px;}
+  .toc-sec{margin-bottom:14px;}
+  .toc-sec h4{font-family:'Nunito',sans-serif; font-size:11.5px; font-weight:800; letter-spacing:.03em; text-transform:uppercase; color:var(--accent-strong); margin:0 0 4px; display:flex; align-items:center; gap:6px;}
+  .toc-sec h4 i{width:9px; height:9px; border-radius:50%; background:var(--accent-strong); display:inline-block;}
+  .toc-sec ol{list-style:none; margin:0; padding:0; font-size:13px; color:var(--ink-dim);}
+  .toc-sec ol li{display:flex; justify-content:space-between; border-bottom:1px dotted var(--line); padding:3px 0;}
+  .toc-sec ol li b{color:var(--ink); font-weight:700;}
+
+  /* section hue assignment: pastel blue -> purple spectrum */
+  .sec-start{--hue:212;} .sec-first{--hue:218;} .sec-data{--hue:224;}
+  .sec-flow{--hue:230;} .sec-loops{--hue:236;} .sec-func{--hue:242;}
+  .sec-turtle{--hue:248;} .sec-random{--hue:254;} .sec-lists{--hue:259;}
+  .sec-game{--hue:264;} .sec-debug{--hue:269;} .sec-read{--hue:274;}
+  .sec-proj{--hue:279;} .sec-tool{--hue:212;}
+  .page{
+    --accent-strong: hsl(var(--hue) 58% 46%);
+    --accent-line: hsl(var(--hue) 62% 58%);
+    --accent-soft: hsl(var(--hue) 78% 93%);
+    --dot: hsl(var(--hue) 70% 62%);
+  }
+  @media (max-width:640px){
+    .page{padding:26px 20px 30px;}
+    .page::after{display:none;}
+    .two-col, .toc-grid{grid-template-columns:1fr;}
+  }
+
+  @media print{
+    @page{ size:letter; margin:0.35in; }
+    :root{ --rule-h:19px; }
+    body{background:#fff; font-size:12.5px; line-height:1.35;}
+    #topnav{display:none;}
+    main{max-width:none; padding:0;}
+    .page{
+      box-shadow:none; break-after:page; break-inside:avoid; margin:0; border-radius:0;
+      padding:6px 4px 4px;
+    }
+    .pagehead{margin-bottom:2px;}
+    .pagenum{font-size:9.5px; padding:2px 7px;}
+    .kicker{font-size:9.5px;}
+    .pagetitle{font-size:19px; margin:3px 0 3px; padding-right:0;}
+    .pagetitle::after{height:3px; width:36px; margin-top:4px;}
+    .lede{font-size:12px; margin:6px 0 7px;}
+    .page p{margin:0 0 5px; line-height:var(--rule-h);}
+    .page h3.sub{font-size:13px; margin:8px 0 3px;}
+    .box{padding:7px 11px 8px; margin:7px 0; border-radius:8px;}
+    .box p{line-height:1.35;}
+    .chip{font-size:8.5px; padding:2px 8px; margin-bottom:4px;}
+    pre.code{padding:7px 9px; font-size:10.5px; line-height:1.3; margin:5px 0; border-radius:7px;}
+    .diagram{margin:6px 0;}
+    .diagram pre{padding:7px 11px; font-size:10px; line-height:1.3; border-radius:7px;}
+    table.chart{margin:6px 0; font-size:11px;}
+    table.chart th{padding:4px 8px; font-size:9px;}
+    table.chart td{padding:4px 8px;}
+    ul.tight, ol.tight{margin:3px 0 5px;}
+    ul.tight li, ol.tight li{margin-bottom:1px;}
+    .badge-list{margin:5px 0; gap:5px;}
+    .badge-list span{padding:2px 9px; font-size:10.5px;}
+    hr.rule{margin:8px 0;}
+    .drawbox{padding:16px 10px 8px; margin:7px 0; min-height:0;}
+    .two-col{gap:8px;}
+    input.fillin, textarea.fillin{background:transparent; border:none; border-bottom:1.5px solid #999; border-radius:0; box-shadow:none; padding:1px 4px; font-size:12px;}
+    textarea.fillin-block{min-height:1.4em;}
+  }
+</style>
+
+<div id="topnav">
+  <div class="brand"><span class="mark">&gt;_</span><b>Intro to Python</b>&nbsp;Workbook</div>
+  <div id="navchips">
+    <a href="#p1" style="--dot:hsl(212 70% 62%)"><i></i>Start</a>
+    <a href="#p4" style="--dot:hsl(218 70% 62%)"><i></i>First Steps</a>
+    <a href="#p9" style="--dot:hsl(224 70% 62%)"><i></i>Data &amp; Variables</a>
+    <a href="#p27" style="--dot:hsl(230 70% 62%)"><i></i>Control Flow</a>
+    <a href="#p31" style="--dot:hsl(236 70% 62%)"><i></i>Loops</a>
+    <a href="#p36" style="--dot:hsl(242 70% 62%)"><i></i>Functions</a>
+    <a href="#p41" style="--dot:hsl(248 70% 62%)"><i></i>Turtle Art</a>
+    <a href="#p49" style="--dot:hsl(254 70% 62%)"><i></i>Randomness</a>
+    <a href="#p51" style="--dot:hsl(259 70% 62%)"><i></i>Lists</a>
+    <a href="#p55" style="--dot:hsl(264 70% 62%)"><i></i>Game Logic</a>
+    <a href="#p60" style="--dot:hsl(269 70% 62%)"><i></i>Debugging</a>
+    <a href="#p64" style="--dot:hsl(274 70% 62%)"><i></i>Code Reading</a>
+    <a href="#p66" style="--dot:hsl(279 70% 62%)"><i></i>Project Design</a>
+    <a href="#p68" style="--dot:hsl(212 70% 62%)"><i></i>Toolbox</a>
+  </div>
+  <button id="printbtn" onclick="window.print()">Print</button>
+</div>
+
+<main>
+
+<!-- ============ PAGE 1 ============ -->
+<section class="page sec-start" id="p1" data-tab="Start Here">
+  <div style="text-align:center; padding:22px 0 6px;">
+    <div class="mono" style="letter-spacing:.25em; text-transform:uppercase; font-size:11.5px; font-weight:700; color:var(--ink-dim);">A Workbook For</div>
+    <h1 style="font-family:'Baloo 2',sans-serif; font-weight:800; font-size:46px; margin:12px 0 6px; background:linear-gradient(120deg,var(--brand),var(--brand-2)); -webkit-background-clip:text; background-clip:text; color:transparent;">Intro to Python</h1>
+    <div class="mono" style="font-size:12.5px; font-weight:700; color:var(--accent-strong); letter-spacing:.06em;">GAMES &nbsp;-&nbsp; ART &nbsp;-&nbsp; ANIMATION &nbsp;-&nbsp; CODE</div>
+  </div>
+  <div class="box def" style="margin-top:20px;">
+    <span class="chip">Owner</span>
+    <p>This workbook belongs to: <input type="text" class="fillin" data-save="owner-name" style="min-width:220px;"></p>
+    <p>Started on: <input type="text" class="fillin" data-save="owner-date" style="min-width:160px;"> &nbsp;&nbsp; Tutor: <input type="text" class="fillin" data-save="owner-tutor" style="min-width:160px;"></p>
+  </div>
+  <p style="text-align:center; color:var(--ink-dim); margin-top:18px; font-size:13.5px;">Type directly into the blanks and boxes - your answers save automatically in this browser.<br>Want a paper copy too? Hit <b>Print</b> up top.</p>
+</section>
+
+<!-- ============ PAGE 2 ============ -->
+<section class="page sec-start" id="p2" data-tab="Start Here">
+  <div class="pagehead"><span class="pagenum">PAGE 2</span><span class="kicker">Start Here</span></div>
+  <h1 class="pagetitle">How To Use This Notebook</h1>
+  <p class="lede">This isn't a book you read once. It's a book you <b>flip through</b> while you're coding - like a mechanic's manual or a chef's recipe box. Every page is built to be understood in about 20 seconds.</p>
+
+  <h3 class="sub">Two color systems are used everywhere</h3>
+  <p><b>1. The colored tab</b> on the edge of every page tells you which <i>section</i> you're in - flip the notebook sideways and you'll see stripes of color, like binder tabs.</p>
+  <p><b>2. The colored boxes</b> tell you what <i>kind</i> of information you're looking at - the color means the same thing on every single page, no matter the topic:</p>
+
+  <table class="chart">
+    <tr><th>Box color</th><th>What it means</th></tr>
+    <tr><td><span class="chip" style="--k:var(--box-def-k);--kt:var(--box-def-t)">Definition</span></td><td>A term is being explained for the first time.</td></tr>
+    <tr><td><span class="chip" style="--k:var(--box-mistake-k);--kt:var(--box-mistake-t)">Common Mistake</span></td><td>Something beginners get wrong - including you, and that's fine.</td></tr>
+    <tr><td><span class="chip" style="--k:var(--box-remember-k);--kt:var(--box-remember-t)">Remember</span></td><td>A rule worth memorizing. If you forget everything else, don't forget this.</td></tr>
+    <tr><td><span class="chip" style="--k:var(--box-practice-k);--kt:var(--box-practice-t)">Try It</span></td><td>A tiny practice question. Actually write the answer in the blank.</td></tr>
+    <tr><td><span class="chip" style="--k:var(--box-analogy-k);--kt:var(--box-analogy-t)">Think Of It Like...</span></td><td>A real-world comparison to help the idea stick.</td></tr>
+    <tr><td><span class="chip" style="--k:var(--box-predict-k);--kt:var(--box-predict-t)">Can You Predict This?</span></td><td>Read code <i>before</i> running it and guess the output.</td></tr>
+    <tr><td><span class="chip" style="--k:var(--box-use-k);--kt:var(--box-use-t)">Where You'd Use This</span></td><td>Connects the concept to a real game or art project.</td></tr>
+  </table>
+
+  <div class="box remember">
+    <span class="chip">Remember</span>
+    <p>When you don't remember what something means - a float, a loop, a bug - don't panic and don't ask first. <b>Flip back</b> to that page. That's the entire point of this notebook.</p>
+  </div>
+</section>
+
+<!-- ============ PAGE 3 ============ -->
+<section class="page sec-start" id="p3" data-tab="Start Here">
+  <div class="pagehead"><span class="pagenum">PAGE 3</span><span class="kicker">Start Here</span></div>
+  <h1 class="pagetitle">Table of Contents</h1>
+  <div class="toc-grid">
+    <div>
+      <div class="toc-sec"><h4><i style="background:hsl(218 70% 55%)"></i>First Steps</h4><ol>
+        <li>Code, Program &amp; Syntax <b>p4</b></li>
+        <li>print() <b>p5</b></li>
+        <li>print() practice <b>p6</b></li>
+        <li>input() <b>p7</b></li>
+        <li>Converting input <b>p8</b></li>
+      </ol></div>
+      <div class="toc-sec"><h4><i style="background:hsl(224 70% 55%)"></i>Data &amp; Variables</h4><ol>
+        <li>Variables - the box <b>p9</b></li>
+        <li>Naming rules <b>p10</b></li>
+        <li>The Data Type Map <b>p11</b></li>
+        <li>String basics <b>p12</b></li>
+        <li>Strings: quotes &amp; joining <b>p13</b></li>
+        <li>String indexing <b>p14</b></li>
+        <li>Negative index &amp; len() <b>p15</b></li>
+        <li>String methods <b>p16</b></li>
+        <li>String mistakes+practice <b>p17</b></li>
+        <li>Integer <b>p18</b></li>
+        <li>Float <b>p19</b></li>
+        <li>Arithmetic operators <b>p20</b></li>
+        <li>Compound assignment <b>p21</b></li>
+        <li>Type conversion <b>p22</b></li>
+        <li>Boolean &amp; comparisons <b>p23</b></li>
+        <li>and / or / not <b>p24</b></li>
+        <li>None <b>p25</b></li>
+        <li>Data types review <b>p26</b></li>
+      </ol></div>
+      <div class="toc-sec"><h4><i style="background:hsl(230 70% 55%)"></i>Control Flow</h4><ol>
+        <li>if statements <b>p27</b></li>
+        <li>if / elif / else <b>p28</b></li>
+        <li>Nested conditions <b>p29</b></li>
+        <li>Control flow practice <b>p30</b></li>
+      </ol></div>
+      <div class="toc-sec"><h4><i style="background:hsl(236 70% 55%)"></i>Loops</h4><ol>
+        <li>What is a loop? <b>p31</b></li>
+        <li>for loops, piece by piece <b>p32</b></li>
+        <li>range() reference <b>p33</b></li>
+        <li>while loops <b>p34</b></li>
+        <li>Loop mistakes+practice <b>p35</b></li>
+      </ol></div>
+      <div class="toc-sec"><h4><i style="background:hsl(242 70% 55%)"></i>Functions</h4><ol>
+        <li>What is a function? <b>p36</b></li>
+        <li>Defining &amp; calling <b>p37</b></li>
+        <li>Parameters vs arguments <b>p38</b></li>
+        <li>Return values <b>p39</b></li>
+        <li>Functions practice <b>p40</b></li>
+      </ol></div>
+    </div>
+    <div>
+      <div class="toc-sec"><h4><i style="background:hsl(248 70% 55%)"></i>Turtle &amp; Visual Art</h4><ol>
+        <li>Meet turtle <b>p41</b></li>
+        <li>Movement commands <b>p42</b></li>
+        <li>Coordinate system <b>p43</b></li>
+        <li>Color &amp; style <b>p44</b></li>
+        <li>Square &amp; triangle <b>p45</b></li>
+        <li>Polygons &amp; stars <b>p46</b></li>
+        <li>Spirals &amp; flowers <b>p47</b></li>
+        <li>Patterns &amp; randomness <b>p48</b></li>
+      </ol></div>
+      <div class="toc-sec"><h4><i style="background:hsl(254 70% 55%)"></i>Randomness</h4><ol>
+        <li>The random module <b>p49</b></li>
+        <li>Randomness practice <b>p50</b></li>
+      </ol></div>
+      <div class="toc-sec"><h4><i style="background:hsl(259 70% 55%)"></i>Lists</h4><ol>
+        <li>What is a list? <b>p51</b></li>
+        <li>Indexing &amp; changing <b>p52</b></li>
+        <li>List methods <b>p53</b></li>
+        <li>Lists in games <b>p54</b></li>
+      </ol></div>
+      <div class="toc-sec"><h4><i style="background:hsl(264 70% 55%)"></i>Game Logic</h4><ol>
+        <li>Game state <b>p55</b></li>
+        <li>The game loop <b>p56</b></li>
+        <li>Game vocabulary I <b>p57</b></li>
+        <li>Game vocabulary II <b>p58</b></li>
+        <li>Tracing a mini game <b>p59</b></li>
+      </ol></div>
+      <div class="toc-sec"><h4><i style="background:hsl(269 70% 55%)"></i>Debugging</h4><ol>
+        <li>Types of bugs <b>p60</b></li>
+        <li>The Bug Detective <b>p61</b></li>
+        <li>The Error Museum <b>p62</b></li>
+        <li>Debugging checklist <b>p63</b></li>
+      </ol></div>
+      <div class="toc-sec"><h4><i style="background:hsl(274 70% 55%)"></i>Code Reading</h4><ol>
+        <li>Tracing variables <b>p64</b></li>
+        <li>What does this do? <b>p65</b></li>
+      </ol></div>
+      <div class="toc-sec"><h4><i style="background:hsl(279 70% 55%)"></i>Project Design</h4><ol>
+        <li>Game Design Blueprint <b>p66</b></li>
+        <li>Planning worksheet <b>p67</b></li>
+      </ol></div>
+      <div class="toc-sec"><h4><i style="background:hsl(212 70% 55%)"></i>Toolbox</h4><ol>
+        <li>Symbols cheat sheet <b>p68</b></li>
+        <li>Vocabulary A-L <b>p69</b></li>
+        <li>Vocabulary M-Z <b>p70</b></li>
+        <li>"When do I use this?" <b>p71</b></li>
+        <li>Visual analogies <b>p72</b></li>
+        <li>Capstone checklist <b>p73</b></li>
+      </ol></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ PAGE 4 ============ -->
+<section class="page sec-first" id="p4" data-tab="First Steps">
+  <div class="pagehead"><span class="pagenum">PAGE 4</span><span class="kicker">First Steps</span></div>
+  <h1 class="pagetitle">Code, Program &amp; Syntax</h1>
+  <p class="lede">Before anything else - the words programmers throw around, defined in plain English.</p>
+
+  <div class="box def">
+    <span class="chip">Definition</span>
+    <p><b>Code</b> - written instructions that tell a computer what to do, written in a language it understands (like Python).</p>
+  </div>
+  <div class="box def">
+    <span class="chip">Definition</span>
+    <p><b>Program</b> - a complete set of code that does something useful when it runs, start to finish. A game is a program. So is a calculator.</p>
+  </div>
+  <div class="box def">
+    <span class="chip">Definition</span>
+    <p><b>Programming</b> - the act of writing code to build a program. That's what you're learning.</p>
+  </div>
+  <div class="box def">
+    <span class="chip">Definition</span>
+    <p><b>Syntax</b> - the exact spelling, punctuation, and grammar rules of a language. Miss a colon or a quote mark and Python won't understand you, even if a human would.</p>
+  </div>
+
+  <div class="box analogy">
+    <span class="chip">Think Of It Like...</span>
+    <p>Syntax is like spelling and grammar in English. "I <i>are</i> hungry" is understandable to a person but wrong. Python is far less forgiving than a person - one missing symbol and it refuses to run at all.</p>
+  </div>
+
+  <div class="diagram">
+    <pre>YOU WRITE CODE  ->  PYTHON READS IT  ->  PYTHON RUNS IT  ->  SOMETHING HAPPENS
+   (syntax matters here) ^</pre>
+  </div>
+
+  <div class="box remember">
+    <span class="chip">Remember</span>
+    <p>Python runs your code <b>top to bottom, one line at a time</b>, unless something (like a loop or a function) tells it to jump around.</p>
+  </div>
+
+  <div class="box use">
+    <span class="chip">Bonus: Comments</span>
+    <p>A <b>comment</b> is a note in your code that Python completely ignores - it's for humans, not the computer. Start one with <code class="inline">#</code>.</p>
+    <pre class="code"># this line does nothing when the program runs
+print("Score:", score)  <span class="c"># this part is a comment too</span></pre>
+    <p>Use comments to remind future-you why a tricky line exists. You don't need many yet - just know the symbol when you see it.</p>
+  </div>
+</section>
+
+<!-- ============ PAGE 5 ============ -->
+<section class="page sec-first" id="p5" data-tab="First Steps">
+  <div class="pagehead"><span class="pagenum">PAGE 5</span><span class="kicker">First Steps</span></div>
+  <h1 class="pagetitle">print() - Talking to the Screen</h1>
+
+  <div class="box def">
+    <span class="chip">Definition</span>
+    <p><code class="inline">print()</code> is a built-in Python <b>function</b> (a reusable action) that displays text or values on the screen.</p>
+  </div>
+
+  <div class="diagram">
+    <pre>  YOUR CODE            PYTHON PROCESSES IT         SCREEN OUTPUT
+print("Hello!")   ------------>  runs  ------------>   Hello!</pre>
+  </div>
+
+  <h3 class="sub">Syntax</h3>
+  <pre class="code">print("some text")</pre>
+  <p>The parentheses <code class="inline">()</code> hold what you want to print. Text must be wrapped in quotation marks - this makes it a <b>string</b> (see p12).</p>
+
+  <pre class="code">print("Hello, world!")
+print("Score:")
+print(10)</pre>
+
+  <div class="box mistake">
+    <span class="chip">Common Mistake</span>
+    <p>Forgetting quotation marks around text:</p>
+    <pre class="code">print(Hello)   <span class="c"># ERROR - Python thinks Hello is a variable name</span></pre>
+    <p>Fix: <code class="inline">print("Hello")</code></p>
+  </div>
+
+  <div class="box mistake">
+    <span class="chip">Common Mistake</span>
+    <p>Forgetting a closing parenthesis:</p>
+    <pre class="code">print("Hello!"</pre>
+    <p>Python will wait forever for the <code class="inline">)</code> that never comes.</p>
+  </div>
+
+  <div class="box practice">
+    <span class="chip">Try It</span>
+    <p>Write a line of code that prints your name:</p>
+    <textarea class="fillin fillin-block" data-save="q1" style="display:block; min-width:100%; height:1.6em;"></textarea>
+  </div>
+</section>
+
+<!-- ============ PAGE 6 ============ -->
+<section class="page sec-first" id="p6" data-tab="First Steps">
+  <div class="pagehead"><span class="pagenum">PAGE 6</span><span class="kicker">First Steps</span></div>
+  <h1 class="pagetitle">print() - More Ways To Use It</h1>
+
+  <h3 class="sub">Printing multiple things with commas</h3>
+  <p>Separate items with commas - Python automatically puts a space between them.</p>
+  <pre class="code">score = 10
+print("Score:", score)   <span class="c"># Score: 10</span></pre>
+
+  <h3 class="sub">Printing numbers directly (no quotes needed)</h3>
+  <pre class="code">print(5)
+print(5 + 2)     <span class="c"># 7  - Python does the math first</span></pre>
+
+  <h3 class="sub">f-strings - building a sentence with variables inside</h3>
+  <p>Put an <code class="inline">f</code> right before the opening quote, then wrap a variable in <code class="inline">{ }</code> to drop it into the sentence.</p>
+  <pre class="code">name = "Ava"
+score = 42
+print(f"{name} scored {score} points!")
+<span class="c"># Ava scored 42 points!</span></pre>
+
+  <div class="box analogy">
+    <span class="chip">Think Of It Like...</span>
+    <p>An f-string is a fill-in-the-blank sentence. The <code class="inline">{ }</code> are the blanks; Python fills them in with whatever the variable holds right now.</p>
+  </div>
+
+  <div class="box predict">
+    <span class="chip">Can You Predict This?</span>
+    <pre class="code">lives = 3
+print(f"Lives left: {lives}")</pre>
+    <p>Output: <input type="text" class="fillin" data-save="q24"></p>
+  </div>
+
+  <div class="box practice">
+    <span class="chip">Try It</span>
+    <p>Fix this line so it actually prints the value of <code class="inline">score</code> instead of the word "score":</p>
+    <pre class="code">score = 5
+print("score")</pre>
+    <p>My fix: <textarea class="fillin fillin-block" data-save="q25" style="display:block; min-width:100%; height:1.6em;"></textarea></p>
+  </div>
+</section>
+
+<!-- ============ PAGE 7 ============ -->
+<section class="page sec-first" id="p7" data-tab="First Steps">
+  <div class="pagehead"><span class="pagenum">PAGE 7</span><span class="kicker">First Steps</span></div>
+  <h1 class="pagetitle">input() - Listening to the User</h1>
+
+  <div class="box def">
+    <span class="chip">Definition</span>
+    <p><code class="inline">input()</code> pauses the program, shows an optional message, and waits for the user to type something and press Enter.</p>
+  </div>
+
+  <pre class="code">name = input("What is your name? ")
+print("Hello,", name)</pre>
+
+  <div class="box remember">
+    <span class="chip">Remember</span>
+    <p><code class="inline">input()</code> <b>always</b> gives back a string - even if the user types numbers. <code class="inline">"25"</code> is text, not the number 25.</p>
+  </div>
+
+  <div class="diagram">
+    <pre>   USER TYPES "25"
+          v
+      input()
+          v
+     STRING "25"      <- this is what Python actually stores
+          v
+   (still just text - you can't do math with it yet)</pre>
+  </div>
+
+  <div class="box mistake">
+    <span class="chip">Common Mistake</span>
+    <pre class="code">age = input("How old are you? ")
+print(age + 1)    <span class="c"># ERROR - can't add a number to a string</span></pre>
+    <p>See p8 for the fix.</p>
+  </div>
+
+  <div class="box use">
+    <span class="chip">Where You'd Use This</span>
+    <p>Asking a player's name before a game starts, asking for a guess in a guessing game, asking "play again? (y/n)".</p>
+  </div>
+
+  <div class="box practice">
+    <span class="chip">Try It</span>
+    <p>Write a line that asks the user "What's your favorite color?" and stores it in a variable called <code class="inline">color</code>:</p>
+    <textarea class="fillin fillin-block" data-save="q2" style="display:block; min-width:100%; height:1.6em;"></textarea>
+  </div>
+</section>
+
+<!-- ============ PAGE 8 ============ -->
+<section class="page sec-first" id="p8" data-tab="First Steps">
+  <div class="pagehead"><span class="pagenum">PAGE 8</span><span class="kicker">First Steps</span></div>
+  <h1 class="pagetitle">Converting input() Into Numbers</h1>
+  <p class="lede">Since <code class="inline">input()</code> always gives a string, you have to convert it before doing math. Full details on p22 - here's the pattern you'll use constantly.</p>
+
+  <div class="diagram">
+    <pre>   USER
+    v
+  input()
+    v
+  STRING "25"
+    v
+  CONVERSION  ->  int("25")
+    v
+  INTEGER 25   <- now you can do math</pre>
+  </div>
+
+  <div class="two-col">
+    <div class="box mistake">
+      <span class="chip">Without conversion</span>
+      <pre class="code">age = input("Age? ")
+print(age + 1)
+<span class="c"># ERROR: can only
+# concatenate str
+# (not "int") to str</span></pre>
+    </div>
+    <div class="box practice">
+      <span class="chip">With conversion</span>
+      <pre class="code">age = int(input("Age? "))
+print(age + 1)
+<span class="c"># works! prints
+# age + 1</span></pre>
+    </div>
+  </div>
+
+  <h3 class="sub">The three converters you'll use most</h3>
+  <table class="chart">
+    <tr><th>Function</th><th>Turns text into...</th><th>Example</th></tr>
+    <tr><td><code class="inline">int()</code></td><td>a whole number</td><td><code class="inline">int("7")</code> -> <code class="inline">7</code></td></tr>
+    <tr><td><code class="inline">float()</code></td><td>a decimal number</td><td><code class="inline">float("3.5")</code> -> <code class="inline">3.5</code></td></tr>
+    <tr><td><code class="inline">str()</code></td><td>text (goes the other way)</td><td><code class="inline">str(7)</code> -> <code class="inline">"7"</code></td></tr>
+  </table>
+
+  <div class="box remember">
+    <span class="chip">Remember</span>
+    <p>You can convert while asking, in one line: <code class="inline">int(input("..."))</code>. Read it inside-out: get input -> then convert it.</p>
+  </div>
+</section>
+
+<!-- ============ PAGE 9 ============ -->
+<section class="page sec-data" id="p9" data-tab="Data &amp; Variables">
+  <div class="pagehead"><span class="pagenum">PAGE 9</span><span class="kicker">Data &amp; Variables</span></div>
+  <h1 class="pagetitle">Variables - The Labeled Box</h1>
+
+  <div class="box def">
+    <span class="chip">Definition</span>
+    <p>A <b>variable</b> is a name that stores a <b>value</b> so you can use it later. <b>Value</b> just means "a piece of data" - a number, some text, etc.</p>
+  </div>
+
+  <div class="box analogy">
+    <span class="chip">Think Of It Like...</span>
+    <p>A variable is a labeled storage box. The label is the variable name. Whatever you put inside is the value. You can look inside anytime, and you can swap out what's inside later.</p>
+  </div>
+
+  <div class="diagram">
+    <pre>score = 100
+
++-------------+
+|   score     |   <- the label (variable name)
++-------------+
+|    100      |   <- what's inside (the value)
++-------------+</pre>
+  </div>
+
+  <h3 class="sub">Changing what's in the box</h3>
+  <pre class="code">score = 100
+score = 150</pre>
+  <div class="diagram">
+    <pre>BEFORE                 AFTER
++-------------+        +-------------+
+|   score     |   ->    |   score     |
++-------------+        +-------------+
+|    100      |        |    150      |   <- old value is gone, overwritten
++-------------+        +-------------+</pre>
+  </div>
+
+  <div class="box remember">
+    <span class="chip">Remember</span>
+    <p>In Python, <code class="inline">=</code> means <b>"store this value in this box,"</b> not "equals" like in math class. It's called <b>assignment</b>. To check if two things are mathematically equal, you use <code class="inline">==</code> (see p23).</p>
+  </div>
+
+  <div class="box predict">
+    <span class="chip">Can You Predict This?</span>
+    <pre class="code">score = 5
+score = score + 1
+print(score)</pre>
+    <p>Output: <input type="text" class="fillin" data-save="q26"> &nbsp; <span style="color:var(--ink-dim); font-size:12px;">(hint: Python reads the right side first, then stores the result)</span></p>
+  </div>
+</section>
+
+<!-- ============ PAGE 10 ============ -->
+<section class="page sec-data" id="p10" data-tab="Data &amp; Variables">
+  <div class="pagehead"><span class="pagenum">PAGE 10</span><span class="kicker">Data &amp; Variables</span></div>
+  <h1 class="pagetitle">Variable Naming Rules</h1>
+
+  <table class="chart">
+    <tr><th>Rule</th><th>Example</th></tr>
+    <tr><td>Can use letters, numbers, underscores</td><td><code class="inline">player_1</code></td></tr>
+    <tr><td>Can't start with a number</td><td><code class="inline">1player</code> (invalid)</td></tr>
+    <tr><td>No spaces - use underscores instead</td><td><code class="inline">high_score</code> not <code class="inline">high score</code></td></tr>
+    <tr><td>Case-sensitive</td><td><code class="inline">Score</code> and <code class="inline">score</code> are different variables</td></tr>
+    <tr><td>Can't use Python's reserved words</td><td><code class="inline">for</code>, <code class="inline">if</code>, <code class="inline">print</code> (invalid)</td></tr>
+  </table>
+
+  <h3 class="sub">Good names vs. bad names</h3>
+  <div class="two-col">
+    <div class="box practice">
+      <span class="chip">Good</span>
+      <ul class="tight">
+        <li><code class="inline">lives</code></li>
+        <li><code class="inline">player_score</code></li>
+        <li><code class="inline">enemy_x</code></li>
+        <li><code class="inline">is_game_over</code></li>
+      </ul>
+    </div>
+    <div class="box mistake">
+      <span class="chip">Bad (works, but confusing)</span>
+      <ul class="tight">
+        <li><code class="inline">x</code> (what is x?)</li>
+        <li><code class="inline">thing2</code></li>
+        <li><code class="inline">data</code></li>
+        <li><code class="inline">l</code> (looks like the number 1)</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="box remember">
+    <span class="chip">Remember</span>
+    <p>Good variable names describe <b>what the value means</b>, not what type it is. Six months from now, <code class="inline">enemy_health</code> will make sense. <code class="inline">e</code> won't.</p>
+  </div>
+
+  <div class="box practice">
+    <span class="chip">Try It</span>
+    <p>Circle the valid variable names: &nbsp; <code class="inline">2lives</code> &nbsp; <code class="inline">player_name</code> &nbsp; <code class="inline">high-score</code> &nbsp; <code class="inline">isAlive</code> &nbsp; <code class="inline">for</code></p>
+  </div>
+</section>
+
+<!-- ============ PAGE 11 ============ -->
+<section class="page sec-data" id="p11" data-tab="Data &amp; Variables">
+  <div class="pagehead"><span class="pagenum">PAGE 11</span><span class="kicker">Data &amp; Variables</span></div>
+  <h1 class="pagetitle">The Data Type Map</h1>
+  <p class="lede">Every value in Python has a <b>data type</b> - a category that tells Python what kind of thing it is and what you're allowed to do with it. Here's the whole map you'll learn:</p>
+
+  <div class="diagram">
+    <pre>                              DATA
+                               |
+        +-----------+---------+---------+--------------+
+        |           |         |         |              |
+      TEXT       NUMBERS   TRUE/FALSE  COLLECTIONS    EMPTY
+        |           |         |         |              |
+     STRING    +----+----+ BOOLEAN    LIST          NONE
+      (str)    |         |  (bool)   (list)        (NoneType)
+             INTEGER   FLOAT
+              (int)   (float)</pre>
+  </div>
+
+  <table class="chart">
+    <tr><th>Type</th><th>Python name</th><th>Example</th><th>Ask yourself</th></tr>
+    <tr><td>String</td><td><code class="inline">str</code></td><td><code class="inline">"Ava"</code></td><td>Is it in quotes?</td></tr>
+    <tr><td>Integer</td><td><code class="inline">int</code></td><td><code class="inline">7</code></td><td>Whole number, no decimal?</td></tr>
+    <tr><td>Float</td><td><code class="inline">float</code></td><td><code class="inline">7.0</code></td><td>Has a decimal point?</td></tr>
+    <tr><td>Boolean</td><td><code class="inline">bool</code></td><td><code class="inline">True</code></td><td>Is it a yes/no answer?</td></tr>
+    <tr><td>List</td><td><code class="inline">list</code></td><td><code class="inline">[1,2,3]</code></td><td>In square brackets?</td></tr>
+    <tr><td>None</td><td><code class="inline">NoneType</code></td><td><code class="inline">None</code></td><td>Is it "nothing on purpose"?</td></tr>
+  </table>
+
+  <div class="box def">
+    <span class="chip">Definition</span>
+    <p>A <b>data type</b> (or "type") is the category a value belongs to. Python needs to know the type so it knows what operations make sense - you can add two numbers, but "adding" two Booleans doesn't mean anything.</p>
+  </div>
+
+  <div class="box practice">
+    <span class="chip">Try It</span>
+    <p>Find out any value's type by wrapping it in <code class="inline">type()</code>:</p>
+    <pre class="code">print(type(5))        <span class="c"># &lt;class 'int'&gt;</span>
+print(type("5"))      <span class="c"># &lt;class 'str'&gt;</span></pre>
+  </div>
+</section>
+
+<!-- ============ PAGE 12 ============ -->
+<section class="page sec-data" id="p12" data-tab="Data &amp; Variables">
+  <div class="pagehead"><span class="pagenum">PAGE 12</span><span class="kicker">Data &amp; Variables</span></div>
+  <h1 class="pagetitle">String - What Is Text Data?</h1>
+
+  <div class="box def">
+    <span class="chip">Definition</span>
+    <p>A <b>string</b> (<code class="inline">str</code>) is text - any sequence of characters wrapped in quotation marks. Letters, numbers, symbols, spaces - all of it counts as a string once it's in quotes.</p>
+  </div>
+
+  <div class="box analogy">
+    <span class="chip">Think Of It Like...</span>
+    <p>A string is like beads on a string (that's actually where the name comes from) - each character is a bead, threaded in order.</p>
+  </div>
+
+  <table class="chart">
+    <tr><th>Examples (strings)</th><th>Not examples</th></tr>
+    <tr><td><code class="inline">"hello"</code></td><td><code class="inline">hello</code> (no quotes - Python treats this as a variable name)</td></tr>
+    <tr><td><code class="inline">"42"</code></td><td><code class="inline">42</code> (no quotes - this is an integer)</td></tr>
+    <tr><td><code class="inline">"Game Over!"</code></td><td><code class="inline">True</code> (this is a Boolean)</td></tr>
+    <tr><td><code class="inline">""</code> (empty string - still a string!)</td><td>&nbsp;</td></tr>
+  </table>
+
+  <h3 class="sub">How to create one</h3>
+  <pre class="code">message = "You win!"
+player_name = "Jordan"</pre>
+
+  <div class="box use">
+    <span class="chip">Where You'd Use This</span>
+    <p><b>Games:</b> player names, messages ("Game Over"), item names. <b>Visual coding:</b> labels, color names passed to turtle like <code class="inline">"red"</code>.</p>
+  </div>
+
+  <div class="box mistake">
+    <span class="chip">Common Mistake</span>
+    <pre class="code">score = "10"
+total = score + 5   <span class="c"># ERROR - "10" is text, not a number</span></pre>
+    <p>Python has no idea how to add a number to text. This is the #1 beginner string bug.</p>
+  </div>
+</section>
+
+<!-- ============ PAGE 13 ============ -->
+<section class="page sec-data" id="p13" data-tab="Data &amp; Variables">
+  <div class="pagehead"><span class="pagenum">PAGE 13</span><span class="kicker">Data &amp; Variables</span></div>
+  <h1 class="pagetitle">Strings: Quotes &amp; Joining</h1>
+
+  <h3 class="sub">Single vs. double quotes</h3>
+  <p>Python doesn't care which you use, as long as you start and end with the <b>same</b> kind.</p>
+  <pre class="code">greeting = 'Hello'
+greeting = "Hello"     <span class="c"># identical to Python</span></pre>
+  <div class="box remember">
+    <span class="chip">Remember</span>
+    <p>Use double quotes when your text contains an apostrophe: <code class="inline">"it's a trap"</code>. Using single quotes there (<code class="inline">'it's a trap'</code>) breaks the string early.</p>
+  </div>
+
+  <h3 class="sub">Concatenation - joining strings with +</h3>
+  <pre class="code">first = "Ava"
+last = "Chen"
+full = first + " " + last
+print(full)      <span class="c"># Ava Chen</span></pre>
+  <div class="box mistake">
+    <span class="chip">Common Mistake</span>
+    <p>Forgetting the space string in between -> <code class="inline">"AvaChen"</code>. The <code class="inline">+</code> doesn't add spaces for you.</p>
+  </div>
+
+  <h3 class="sub">Repeating strings with *</h3>
+  <pre class="code">line = "-" * 10
+print(line)     <span class="c"># ----------</span></pre>
+
+  <div class="box use">
+    <span class="chip">Where You'd Use This</span>
+    <p>Building a divider line, repeating a character for a loading bar, stacking a player's name onto their score in one printed line.</p>
+  </div>
+
+  <div class="box predict">
+    <span class="chip">Can You Predict This?</span>
+    <pre class="code">word = "ha"
+laugh = word * 3
+print(laugh)</pre>
+    <p>Output: <input type="text" class="fillin" data-save="q27"></p>
+  </div>
+</section>
+
+<!-- ============ PAGE 14 ============ -->
+<section class="page sec-data" id="p14" data-tab="Data &amp; Variables">
+  <div class="pagehead"><span class="pagenum">PAGE 14</span><span class="kicker">Data &amp; Variables</span></div>
+  <h1 class="pagetitle">String Indexing</h1>
+
+  <div class="box def">
+    <span class="chip">Definition</span>
+    <p><b>Indexing</b> means grabbing one character out of a string by its position number. Python starts counting positions at <b>0</b>, not 1.</p>
+  </div>
+
+  <div class="diagram">
+    <pre>            "PYTHON"
+
+         P    Y    T    H    O    N
+         0    1    2    3    4    5     <- index numbers</pre>
+  </div>
+
+  <pre class="code">word = "PYTHON"
+print(word[0])     <span class="c"># P</span>
+print(word[2])     <span class="c"># T</span></pre>
+
+  <div class="box remember">
+    <span class="chip">Remember</span>
+    <p>Square brackets <code class="inline">[ ]</code> after a variable = "give me the character at this position." Counting starts at 0. This trips up <i>every</i> beginner at least once - it's not just you.</p>
+  </div>
+
+  <div class="box mistake">
+    <span class="chip">Common Mistake</span>
+    <pre class="code">word = "PYTHON"
+print(word[6])   <span class="c"># ERROR - index out of range</span></pre>
+    <p>The last valid index is <b>length - 1</b>. "PYTHON" has 6 letters, so valid indexes are 0-5.</p>
+  </div>
+
+  <div class="box practice">
+    <span class="chip">Try It</span>
+    <p>For <code class="inline">word = "GAME"</code>, what is <code class="inline">word[1]</code>? &nbsp; <input type="text" class="fillin" data-save="q28"></p>
+  </div>
+</section>
+
+<!-- ============ PAGE 15 ============ -->
+<section class="page sec-data" id="p15" data-tab="Data &amp; Variables">
+  <div class="pagehead"><span class="pagenum">PAGE 15</span><span class="kicker">Data &amp; Variables</span></div>
+  <h1 class="pagetitle">Negative Indexing &amp; len()</h1>
+
+  <p>Python also lets you count <b>backward from the end</b>, using negative numbers. <code class="inline">-1</code> is always the last character.</p>
+
+  <div class="diagram">
+    <pre>            "PYTHON"
+
+         P    Y    T    H    O    N
+        -6   -5   -4   -3   -2   -1    <- negative index numbers</pre>
+  </div>
+
+  <pre class="code">word = "PYTHON"
+print(word[-1])    <span class="c"># N  (last letter)</span>
+print(word[-2])    <span class="c"># O  (second to last)</span></pre>
+
+  <div class="box def">
+    <span class="chip">Definition</span>
+    <p><code class="inline">len()</code> returns how many characters are in a string (its <b>length</b>).</p>
+  </div>
+  <pre class="code">word = "PYTHON"
+print(len(word))    <span class="c"># 6</span></pre>
+
+  <div class="box remember">
+    <span class="chip">Remember</span>
+    <p><code class="inline">len(word) - 1</code> always equals the index of the last character. That's why <code class="inline">word[-1]</code> is such a handy shortcut - no counting required.</p>
+  </div>
+
+  <div class="box predict">
+    <span class="chip">Can You Predict This?</span>
+    <pre class="code">name = "ROBOT"
+print(len(name))
+print(name[-1])</pre>
+    <p>Output: <input type="text" class="fillin" data-save="q29"> and <input type="text" class="fillin" data-save="q30"></p>
+  </div>
+</section>
+
+<!-- ============ PAGE 16 ============ -->
+<section class="page sec-data" id="p16" data-tab="Data &amp; Variables">
+  <div class="pagehead"><span class="pagenum">PAGE 16</span><span class="kicker">Data &amp; Variables</span></div>
+  <h1 class="pagetitle">String Methods</h1>
+
+  <div class="box def">
+    <span class="chip">Definition</span>
+    <p>A <b>method</b> is an action attached to a value, called with a dot: <code class="inline">value.method()</code>. String methods never change the original string - they hand back a brand-new one.</p>
+  </div>
+
+  <table class="chart">
+    <tr><th>Method</th><th>What it does</th><th>Example</th></tr>
+    <tr><td><code class="inline">.upper()</code></td><td>ALL CAPS</td><td><code class="inline">"hi".upper()</code> -> <code class="inline">"HI"</code></td></tr>
+    <tr><td><code class="inline">.lower()</code></td><td>all lowercase</td><td><code class="inline">"HI".lower()</code> -> <code class="inline">"hi"</code></td></tr>
+    <tr><td><code class="inline">.strip()</code></td><td>removes spaces from the ends</td><td><code class="inline">"  hi  ".strip()</code> -> <code class="inline">"hi"</code></td></tr>
+    <tr><td><code class="inline">.replace(a,b)</code></td><td>swaps all of <code class="inline">a</code> for <code class="inline">b</code></td><td><code class="inline">"cat".replace("c","b")</code> -> <code class="inline">"bat"</code></td></tr>
+  </table>
+
+  <pre class="code">name = "  Ava  "
+clean = name.strip()
+print(clean.upper())     <span class="c"># AVA</span></pre>
+
+  <div class="box use">
+    <span class="chip">Where You'd Use This</span>
+    <p><code class="inline">.upper()</code> for a "GAME OVER" banner. <code class="inline">.strip()</code> to clean up messy typed input. <code class="inline">.lower()</code> so <code class="inline">"YES"</code> and <code class="inline">"yes"</code> both count as a valid answer.</p>
+  </div>
+
+  <div class="box practice">
+    <span class="chip">Try It</span>
+    <p><code class="inline">"play again".replace("play", "quit")</code> -> <input type="text" class="fillin" data-save="q31"></p>
+  </div>
+</section>
+
+<!-- ============ PAGE 17 ============ -->
+<section class="page sec-data" id="p17" data-tab="Data &amp; Variables">
+  <div class="pagehead"><span class="pagenum">PAGE 17</span><span class="kicker">Data &amp; Variables</span></div>
+  <h1 class="pagetitle">String Roundup: Mistakes &amp; Practice</h1>
+
+  <div class="box mistake">
+    <span class="chip">Common Mistake</span>
+    <p>Mismatched quotes: <code class="inline">"hello'</code> - Python needs the same quote type on both ends.</p>
+  </div>
+  <div class="box mistake">
+    <span class="chip">Common Mistake</span>
+    <p>Treating a number-looking string as a number: <code class="inline">"3" + "4"</code> gives <code class="inline">"34"</code> (joined text), not <code class="inline">7</code>.</p>
+  </div>
+  <div class="box mistake">
+    <span class="chip">Common Mistake</span>
+    <p>Off-by-one indexing: expecting <code class="inline">word[1]</code> to be the first letter. It's actually the second.</p>
+  </div>
+
+  <hr class="rule">
+  <h3 class="sub">Mini Practice</h3>
+  <div class="box practice">
+    <span class="chip">1</span><p>What is the data type of <code class="inline">"42"</code>? <input type="text" class="fillin" data-save="q32"></p>
+  </div>
+  <div class="box practice">
+    <span class="chip">2</span><p><code class="inline">word = "SPACE"</code> - what is <code class="inline">word[0]</code>? <input type="text" class="fillin" data-save="q33"> &nbsp; What is <code class="inline">word[-1]</code>? <input type="text" class="fillin" data-save="q34"></p>
+  </div>
+  <div class="box practice">
+    <span class="chip">3</span><p>What does <code class="inline">"go" * 3</code> print? <input type="text" class="fillin" data-save="q35"></p>
+  </div>
+  <div class="box practice">
+    <span class="chip">4</span><p>Find the bug: <code class="inline">print('It's a bug')</code> - what's wrong and how would you fix it?</p>
+    <textarea class="fillin fillin-block" data-save="q3" style="display:block; min-width:100%; height:1.4em;"></textarea>
+  </div>
+</section>
+
+<!-- ============ PAGE 18 ============ -->
+<section class="page sec-data" id="p18" data-tab="Data &amp; Variables">
+  <div class="pagehead"><span class="pagenum">PAGE 18</span><span class="kicker">Data &amp; Variables</span></div>
+  <h1 class="pagetitle">Integer - Whole Numbers</h1>
+
+  <div class="box def">
+    <span class="chip">Definition</span>
+    <p>An <b>integer</b> (<code class="inline">int</code>) is a whole number with no decimal part. It can be positive, negative, or zero.</p>
+  </div>
+
+  <div class="diagram">
+    <pre>              INTEGER
+                 v
+           WHOLE NUMBER
+        +--------+--------+
+     positive    zero    negative
+        5          0        -12</pre>
+  </div>
+
+  <table class="chart">
+    <tr><th>Integers</th><th>Not integers</th></tr>
+    <tr><td><code class="inline">5</code>, <code class="inline">0</code>, <code class="inline">-12</code>, <code class="inline">100</code></td><td><code class="inline">3.14</code> (has a decimal) &nbsp;-&nbsp; <code class="inline">"5"</code> (it's text)</td></tr>
+  </table>
+
+  <div class="box use">
+    <span class="chip">Where You'd Use This</span>
+    <p><b>Games:</b> score, lives, age, number of enemies, number of repetitions in a loop. <b>Visual coding:</b> pixel coordinates, number of sides on a shape, turtle turn angles.</p>
+  </div>
+
+  <pre class="code">score = 10
+lives = 3</pre>
+
+  <div class="box mistake">
+    <span class="chip">Common Mistake</span>
+    <pre class="code">score = "10"    <span class="c"># this is a STRING, not an integer!</span></pre>
+    <p>The quotation marks make it text. Python won't let you do math with it until you convert it with <code class="inline">int()</code> (p22).</p>
+  </div>
+
+  <div class="box predict">
+    <span class="chip">Can You Predict This?</span>
+    <pre class="code">lives = 3
+lives = lives - 1
+print(lives)</pre>
+    <p>Output: <input type="text" class="fillin" data-save="q36"></p>
+  </div>
+</section>
+
+<!-- ============ PAGE 19 ============ -->
+<section class="page sec-data" id="p19" data-tab="Data &amp; Variables">
+  <div class="pagehead"><span class="pagenum">PAGE 19</span><span class="kicker">Data &amp; Variables</span></div>
+  <h1 class="pagetitle">Float - Decimal Numbers</h1>
+
+  <div class="box def">
+    <span class="chip">Definition</span>
+    <p>A <b>float</b> (<code class="inline">float</code>, short for "floating-point number") is any number with a decimal point.</p>
+  </div>
+
+  <div class="box analogy">
+    <span class="chip">Think Of It Like...</span>
+    <p>If an integer is a counting number (how many whole cookies), a float is a measuring cup - it captures the part in between whole numbers.</p>
+  </div>
+
+  <table class="chart">
+    <tr><th>Floats</th><th>Not floats</th></tr>
+    <tr><td><code class="inline">3.14</code>, <code class="inline">0.5</code>, <code class="inline">-2.0</code>, <code class="inline">100.0</code></td><td><code class="inline">3</code> (no decimal - that's an int) &nbsp;-&nbsp; <code class="inline">"3.14"</code> (text)</td></tr>
+  </table>
+
+  <div class="box use">
+    <span class="chip">Where You'd Use This</span>
+    <p><b>Games:</b> health percentages, speed, gravity, timers counting down in seconds. <b>Visual coding:</b> smooth turtle movement speeds, precise angles, fading colors.</p>
+  </div>
+
+  <pre class="code">health = 87.5
+turtle_speed = 1.5</pre>
+
+  <div class="box mistake">
+    <span class="chip">Common Mistake</span>
+    <pre class="code">price = 10
+print(price / 3)     <span class="c"># 3.3333333333333335</span></pre>
+    <p>Dividing two integers with <code class="inline">/</code> in Python still gives you a <b>float</b> back - division almost never stays a clean whole number.</p>
+  </div>
+
+  <div class="box predict">
+    <span class="chip">Can You Predict This?</span>
+    <pre class="code">x = 5
+y = 2.0
+print(x + y)</pre>
+    <p>Output: <input type="text" class="fillin" data-save="q37"> &nbsp; <span style="font-size:12px; color:var(--ink-dim);">(mixing int + float always produces a float)</span></p>
+  </div>
+</section>
+
+<!-- ============ PAGE 20 ============ -->
+<section class="page sec-data" id="p20" data-tab="Data &amp; Variables">
+  <div class="pagehead"><span class="pagenum">PAGE 20</span><span class="kicker">Data &amp; Variables</span></div>
+  <h1 class="pagetitle">Arithmetic Operators Chart</h1>
+
+  <table class="chart">
+    <tr><th>Symbol</th><th>Name</th><th>Example</th><th>Result</th></tr>
+    <tr><td><code class="inline">+</code></td><td>Addition</td><td><code class="inline">5 + 2</code></td><td><code class="inline">7</code></td></tr>
+    <tr><td><code class="inline">-</code></td><td>Subtraction</td><td><code class="inline">5 - 2</code></td><td><code class="inline">3</code></td></tr>
+    <tr><td><code class="inline">*</code></td><td>Multiplication</td><td><code class="inline">5 * 2</code></td><td><code class="inline">10</code></td></tr>
+    <tr><td><code class="inline">/</code></td><td>Division (always gives a float)</td><td><code class="inline">5 / 2</code></td><td><code class="inline">2.5</code></td></tr>
+    <tr><td><code class="inline">//</code></td><td>Floor division (rounds down, drops remainder)</td><td><code class="inline">5 // 2</code></td><td><code class="inline">2</code></td></tr>
+    <tr><td><code class="inline">%</code></td><td>Modulo (the leftover remainder)</td><td><code class="inline">5 % 2</code></td><td><code class="inline">1</code></td></tr>
+    <tr><td><code class="inline">**</code></td><td>Exponent (power)</td><td><code class="inline">5 ** 2</code></td><td><code class="inline">25</code></td></tr>
+  </table>
+
+  <div class="box use">
+    <span class="chip">Game Examples</span>
+    <pre class="code">score = score + 10        <span class="c"># add points</span>
+lives = lives - 1         <span class="c"># lose a life</span>
+is_even_turn = turn % 2   <span class="c"># 0 if even, 1 if odd</span></pre>
+  </div>
+
+  <div class="box analogy">
+    <span class="chip">Think Of It Like...</span>
+    <p><code class="inline">%</code> (modulo) is what's left over after you divide as evenly as you can - like dealing 13 cards to 4 players: everyone gets 3, and <code class="inline">13 % 4 = 1</code> card is left over.</p>
+  </div>
+
+  <div class="box predict">
+    <span class="chip">Can You Predict This?</span>
+    <pre class="code">print(10 // 3)
+print(10 % 3)</pre>
+    <p>Output: <input type="text" class="fillin" data-save="q38"> and <input type="text" class="fillin" data-save="q39"></p>
+  </div>
+</section>
+
+<!-- ============ PAGE 21 ============ -->
+<section class="page sec-data" id="p21" data-tab="Data &amp; Variables">
+  <div class="pagehead"><span class="pagenum">PAGE 21</span><span class="kicker">Data &amp; Variables</span></div>
+  <h1 class="pagetitle">Compound Assignment Operators</h1>
+  <p class="lede">A shortcut for "take a variable, change it, and store it back in itself."</p>
+
+  <table class="chart">
+    <tr><th>Shortcut</th><th>Means the same as</th></tr>
+    <tr><td><code class="inline">score += 10</code></td><td><code class="inline">score = score + 10</code></td></tr>
+    <tr><td><code class="inline">lives -= 1</code></td><td><code class="inline">lives = lives - 1</code></td></tr>
+    <tr><td><code class="inline">size *= 2</code></td><td><code class="inline">size = size * 2</code></td></tr>
+    <tr><td><code class="inline">health /= 2</code></td><td><code class="inline">health = health / 2</code></td></tr>
+  </table>
+
+  <pre class="code">score = 0
+score += 10
+score += 10
+print(score)     <span class="c"># 20</span></pre>
+
+  <div class="box remember">
+    <span class="chip">Remember</span>
+    <p>Read <code class="inline">+=</code> as "plus-equals." It always means: do the math, then save the result back into the same box.</p>
+  </div>
+
+  <div class="box use">
+    <span class="chip">Where You'd Use This</span>
+    <p>Nearly every game uses these constantly: adding points on a hit, subtracting a life on damage, doubling a power-up's strength.</p>
+  </div>
+
+  <div class="box practice">
+    <span class="chip">Try It</span>
+    <p>Rewrite <code class="inline">lives = lives - 1</code> using a compound operator: <input type="text" class="fillin" data-save="q40"></p>
+  </div>
+</section>
+
+<!-- ============ PAGE 22 ============ -->
+<section class="page sec-data" id="p22" data-tab="Data &amp; Variables">
+  <div class="pagehead"><span class="pagenum">PAGE 22</span><span class="kicker">Data &amp; Variables</span></div>
+  <h1 class="pagetitle">Type Conversion - Full Reference</h1>
+  <div class="box def">
+    <span class="chip">Definition</span>
+    <p><b>Type conversion</b> means changing a value from one data type to another using <code class="inline">int()</code>, <code class="inline">float()</code>, or <code class="inline">str()</code>.</p>
+  </div>
+
+  <div class="diagram">
+    <pre>"25"  --int()-->   25          text -> whole number
+"3.14"--float()>  3.14         text -> decimal number
+ 25  --str()--->  "25"         number -> text</pre>
+  </div>
+
+  <table class="chart">
+    <tr><th>Function</th><th>Converts to</th><th>Fails if...</th></tr>
+    <tr><td><code class="inline">int(x)</code></td><td>integer</td><td><code class="inline">x</code> isn't a whole number, e.g. <code class="inline">int("hi")</code></td></tr>
+    <tr><td><code class="inline">float(x)</code></td><td>float</td><td><code class="inline">x</code> isn't a valid number at all</td></tr>
+    <tr><td><code class="inline">str(x)</code></td><td>string</td><td>almost never fails - everything can become text</td></tr>
+  </table>
+
+  <div class="box use">
+    <span class="chip">Why This Matters In Games</span>
+    <p>Every value typed by a player arrives as a string. Want to compare a guess to a random number? Convert first. Want to show a number inside a sentence with <code class="inline">+</code> instead of an f-string? Convert the number to a string first.</p>
+  </div>
+
+  <pre class="code">guess = int(input("Guess the number: "))
+score = 10
+message = "Score: " + str(score)   <span class="c"># must convert to join with +</span></pre>
+
+  <div class="box mistake">
+    <span class="chip">Common Mistake</span>
+    <pre class="code">print("Score: " + 10)   <span class="c"># ERROR - can't + a string and an int</span></pre>
+    <p>Fix: <code class="inline">print("Score: " + str(10))</code> or just use an f-string (p6).</p>
+  </div>
+</section>
+
+<!-- ============ PAGE 23 ============ -->
+<section class="page sec-data" id="p23" data-tab="Data &amp; Variables">
+  <div class="pagehead"><span class="pagenum">PAGE 23</span><span class="kicker">Data &amp; Variables</span></div>
+  <h1 class="pagetitle">Boolean &amp; Comparison Operators</h1>
+
+  <div class="box def">
+    <span class="chip">Definition</span>
+    <p>A <b>Boolean</b> (<code class="inline">bool</code>) is a value that is either <code class="inline">True</code> or <code class="inline">False</code>. Nothing in between.</p>
+  </div>
+
+  <div class="box analogy">
+    <span class="chip">Think Of It Like...</span>
+    <p>A Boolean is a light switch - only ON or OFF. There's no dimmer setting.</p>
+  </div>
+
+  <p><b>Comparison operators</b> compare two values and always produce a Boolean.</p>
+  <table class="chart">
+    <tr><th>Symbol</th><th>Meaning</th><th>Example</th><th>Result</th></tr>
+    <tr><td><code class="inline">==</code></td><td>equal to</td><td><code class="inline">5 == 5</code></td><td><code class="inline">True</code></td></tr>
+    <tr><td><code class="inline">!=</code></td><td>not equal to</td><td><code class="inline">5 != 3</code></td><td><code class="inline">True</code></td></tr>
+    <tr><td><code class="inline">&gt;</code></td><td>greater than</td><td><code class="inline">5 &gt; 3</code></td><td><code class="inline">True</code></td></tr>
+    <tr><td><code class="inline">&lt;</code></td><td>less than</td><td><code class="inline">5 &lt; 3</code></td><td><code class="inline">False</code></td></tr>
+    <tr><td><code class="inline">&gt;=</code></td><td>greater or equal</td><td><code class="inline">5 &gt;= 5</code></td><td><code class="inline">True</code></td></tr>
+    <tr><td><code class="inline">&lt;=</code></td><td>less or equal</td><td><code class="inline">5 &lt;= 3</code></td><td><code class="inline">False</code></td></tr>
+  </table>
+
+  <div class="diagram">
+    <pre>   5 > 3          5 == 3
+     v               v
+   True            False</pre>
+  </div>
+
+  <div class="box mistake">
+    <span class="chip">Common Mistake</span>
+    <p>Using <code class="inline">=</code> (assignment) when you mean <code class="inline">==</code> (comparison). <code class="inline">if score = 10:</code> is a syntax error - use <code class="inline">if score == 10:</code>.</p>
+  </div>
+
+  <div class="box predict">
+    <span class="chip">Can You Predict This?</span>
+    <pre class="code">lives = 0
+print(lives == 0)
+print(lives > 0)</pre>
+    <p>Output: <input type="text" class="fillin" data-save="q41"> and <input type="text" class="fillin" data-save="q42"></p>
+  </div>
+</section>
+
+<!-- ============ PAGE 24 ============ -->
+<section class="page sec-data" id="p24" data-tab="Data &amp; Variables">
+  <div class="pagehead"><span class="pagenum">PAGE 24</span><span class="kicker">Data &amp; Variables</span></div>
+  <h1 class="pagetitle">and / or / not</h1>
+  <p class="lede">These combine multiple Boolean values into one Boolean answer.</p>
+
+  <table class="chart">
+    <tr><th>A</th><th>B</th><th><code class="inline">A and B</code></th><th><code class="inline">A or B</code></th></tr>
+    <tr><td>True</td><td>True</td><td>True</td><td>True</td></tr>
+    <tr><td>True</td><td>False</td><td>False</td><td>True</td></tr>
+    <tr><td>False</td><td>True</td><td>False</td><td>True</td></tr>
+    <tr><td>False</td><td>False</td><td>False</td><td>False</td></tr>
+  </table>
+
+  <div class="badge-list">
+    <span><code class="inline">and</code> -> both must be true</span>
+    <span><code class="inline">or</code> -> at least one must be true</span>
+    <span><code class="inline">not</code> -> flips it (True <-> False)</span>
+  </div>
+
+  <pre class="code">has_key = True
+door_unlocked = False
+print(has_key and door_unlocked)   <span class="c"># False - needs BOTH</span>
+print(has_key or door_unlocked)    <span class="c"># True - needs just ONE</span>
+print(not has_key)                 <span class="c"># False - flipped</span></pre>
+
+  <div class="box use">
+    <span class="chip">Where You'd Use This</span>
+    <p><code class="inline">if lives &gt; 0 and time_left &gt; 0:</code> - game only continues if <i>both</i> are true. <code class="inline">if answer == "y" or answer == "yes":</code> - accept either spelling.</p>
+  </div>
+
+  <div class="box practice">
+    <span class="chip">Try It</span>
+    <p><code class="inline">print(not False)</code> -> <input type="text" class="fillin" data-save="q43"></p>
+  </div>
+</section>
+
+<!-- ============ PAGE 25 ============ -->
+<section class="page sec-data" id="p25" data-tab="Data &amp; Variables">
+  <div class="pagehead"><span class="pagenum">PAGE 25</span><span class="kicker">Data &amp; Variables</span></div>
+  <h1 class="pagetitle">None - The Empty Value</h1>
+
+  <div class="box def">
+    <span class="chip">Definition</span>
+    <p><code class="inline">None</code> is a special value meaning <b>"nothing, on purpose."</b> Its type is <code class="inline">NoneType</code>. It is not 0, not an empty string, not False - it's the absence of a value entirely.</p>
+  </div>
+
+  <div class="box analogy">
+    <span class="chip">Think Of It Like...</span>
+    <p>An empty inventory slot isn't "zero items sitting there" - it's a slot with nothing assigned to it yet. That's <code class="inline">None</code>.</p>
+  </div>
+
+  <pre class="code">winner = None       <span class="c"># no winner yet</span>
+selected_item = None
+
+if winner is None:
+    print("Game still going")</pre>
+
+  <div class="box remember">
+    <span class="chip">Remember</span>
+    <p>Compare to <code class="inline">None</code> using <code class="inline">is None</code>, not <code class="inline">== None</code>. Not required to know why yet - just the habit to build now.</p>
+  </div>
+
+  <div class="box use">
+    <span class="chip">Where You'd Use This</span>
+    <p>A "current target" variable before the player selects an enemy. A "high score" before any score has been recorded. A function that hasn't returned anything yet.</p>
+  </div>
+
+  <div class="box mistake">
+    <span class="chip">Common Mistake</span>
+    <p>Confusing <code class="inline">None</code> with <code class="inline">0</code> or <code class="inline">""</code>. All three are "falsy," but they mean different things - 0 is a real number, <code class="inline">None</code> is the absence of one.</p>
+  </div>
+</section>
+
+<!-- ============ PAGE 26 ============ -->
+<section class="page sec-data" id="p26" data-tab="Data &amp; Variables">
+  <div class="pagehead"><span class="pagenum">PAGE 26</span><span class="kicker">Data &amp; Variables</span></div>
+  <h1 class="pagetitle">Data Types Review Roundup</h1>
+
+  <div class="box practice">
+    <span class="chip">1 - Name the type</span>
+    <table class="chart">
+      <tr><td><code class="inline">"7"</code></td><td><input type="text" class="fillin" data-save="q44"></td></tr>
+      <tr><td><code class="inline">7</code></td><td><input type="text" class="fillin" data-save="q45"></td></tr>
+      <tr><td><code class="inline">7.0</code></td><td><input type="text" class="fillin" data-save="q46"></td></tr>
+      <tr><td><code class="inline">True</code></td><td><input type="text" class="fillin" data-save="q47"></td></tr>
+      <tr><td><code class="inline">None</code></td><td><input type="text" class="fillin" data-save="q48"></td></tr>
+    </table>
+  </div>
+
+  <div class="box predict">
+    <span class="chip">2 - Predict the output</span>
+    <pre class="code">a = 4
+b = "4"
+print(a == b)</pre>
+    <p>Output: <input type="text" class="fillin" data-save="q49"> <span style="font-size:12px; color:var(--ink-dim);">(different types are never equal, even if they look alike)</span></p>
+  </div>
+
+  <div class="box practice">
+    <span class="chip">3 - Fix the bug</span>
+    <pre class="code">age = input("Age: ")
+next_year = age + 1
+print(next_year)</pre>
+    <p>What's wrong, and how would you fix line 2?</p>
+    <textarea class="fillin fillin-block" data-save="q4" style="display:block; min-width:100%; height:1.6em;"></textarea>
+  </div>
+
+  <div class="drawbox"><span class="label">sketch: draw your own data type map from memory</span><textarea class="fillin" data-save="draw1" placeholder="type your notes or describe your sketch here..."></textarea></div>
+</section>
+
+<!-- ============ PAGE 27 ============ -->
+<section class="page sec-flow" id="p27" data-tab="Control Flow">
+  <div class="pagehead"><span class="pagenum">PAGE 27</span><span class="kicker">Control Flow</span></div>
+  <h1 class="pagetitle">if Statements - Making Decisions</h1>
+
+  <div class="box def">
+    <span class="chip">Definition</span>
+    <p>A <b>condition</b> is a statement that's either True or False. An <code class="inline">if</code> statement runs a block of code <b>only if</b> its condition is True.</p>
+  </div>
+
+  <div class="box def">
+    <span class="chip">Definition</span>
+    <p><b>Indentation</b> (the spaces at the start of a line) is how Python knows which lines belong <i>inside</i> the if statement. Python uses indentation instead of curly braces - it's not optional, it's syntax.</p>
+  </div>
+
+  <pre class="code">if lives &gt; 0:
+    print("Keep playing!")</pre>
+
+  <div class="diagram">
+    <pre>if lives > 0 :
+ |    |    |  |
+ |    |    |  +-- colon - always ends the if line
+ |    |    +----- condition being checked
+ |    +---------- the variable
+ +--------------- keyword that starts the decision</pre>
+  </div>
+
+  <div class="box mistake">
+    <span class="chip">Common Mistake</span>
+    <pre class="code">if lives > 0
+    print("Keep playing!")   <span class="c"># missing colon after condition</span></pre>
+  </div>
+  <div class="box mistake">
+    <span class="chip">Common Mistake</span>
+    <pre class="code">if lives > 0:
+print("Keep playing!")   <span class="c"># not indented - Python doesn't know it's inside the if</span></pre>
+  </div>
+
+  <div class="box practice">
+    <span class="chip">Try It</span>
+    <p>Write an if statement that prints "Level up!" when <code class="inline">score &gt;= 100</code>:</p>
+    <textarea class="fillin fillin-block" data-save="q5" style="display:block; min-width:100%; height:1.6em;"></textarea>
+  </div>
+</section>
+
+<!-- ============ PAGE 28 ============ -->
+<section class="page sec-flow" id="p28" data-tab="Control Flow">
+  <div class="pagehead"><span class="pagenum">PAGE 28</span><span class="kicker">Control Flow</span></div>
+  <h1 class="pagetitle">if / elif / else</h1>
+
+  <table class="chart">
+    <tr><th>Keyword</th><th>Means</th></tr>
+    <tr><td><code class="inline">if</code></td><td>Check this condition first.</td></tr>
+    <tr><td><code class="inline">elif</code></td><td>"Else if" - if the first one was False, check this one instead.</td></tr>
+    <tr><td><code class="inline">else</code></td><td>If none of the above were True, do this. No condition needed.</td></tr>
+  </table>
+
+  <pre class="code">if score &gt;= 90:
+    print("A")
+elif score &gt;= 80:
+    print("B")
+else:
+    print("Keep practicing")</pre>
+
+  <div class="box def">
+    <span class="chip">Flowchart</span>
+    <div class="diagram">
+      <pre>          PLAYER HAS KEY?
+                 |
+          +------+------+
+         YES            NO
+          |              |
+      OPEN DOOR      "LOCKED"
+          |              |
+        (done)         (done)</pre>
+    </div>
+  </div>
+
+  <pre class="code">if has_key:
+    print("The door opens.")
+else:
+    print("Locked. Find a key.")</pre>
+
+  <div class="box remember">
+    <span class="chip">Remember</span>
+    <p>Python checks conditions <b>top to bottom</b> and stops at the first True one. Once one branch runs, the rest are skipped - even if they'd also be True.</p>
+  </div>
+
+  <div class="box predict">
+    <span class="chip">Can You Predict This?</span>
+    <pre class="code">score = 85
+if score &gt;= 90:
+    print("A")
+elif score &gt;= 80:
+    print("B")
+elif score &gt;= 80:
+    print("also B?")</pre>
+    <p>Output: <input type="text" class="fillin" data-save="q50"></p>
+  </div>
+</section>
+
+<!-- ============ PAGE 29 ============ -->
+<section class="page sec-flow" id="p29" data-tab="Control Flow">
+  <div class="pagehead"><span class="pagenum">PAGE 29</span><span class="kicker">Control Flow</span></div>
+  <h1 class="pagetitle">Nested Conditions &amp; Game Examples</h1>
+
+  <div class="box def">
+    <span class="chip">Definition</span>
+    <p><b>Nesting</b> means putting one if statement inside another. The inner condition is only even checked if the outer one was True.</p>
+  </div>
+
+  <pre class="code">if has_key:
+    if enemies_defeated:
+        print("The treasure room opens!")
+    else:
+        print("Door is jammed by enemies.")
+else:
+    print("You need a key first.")</pre>
+
+  <div class="diagram">
+    <pre>       HAS KEY?
+      +---+---+
+     YES      NO -> "need a key"
+      |
+  ENEMIES DEFEATED?
+   +---+---+
+  YES      NO -> "jammed"
+   |
+"treasure room opens!"</pre>
+  </div>
+
+  <div class="box remember">
+    <span class="chip">Remember</span>
+    <p>Each level of nesting = one more level of indentation. If your indentation gets messy, your logic usually is too - that's a sign to simplify.</p>
+  </div>
+
+  <div class="box use">
+    <span class="chip">Where You'd Use This</span>
+    <p>Checking win conditions (<code class="inline">if lives &gt; 0 and flag_captured:</code>), checking multiple requirements to unlock a level, checking difficulty tiers.</p>
+  </div>
+
+  <div class="box practice">
+    <span class="chip">Try It</span>
+    <p>Rewrite the nested example above using <code class="inline">and</code> instead of nesting, for the "treasure room" case only:</p>
+    <textarea class="fillin fillin-block" data-save="q6" style="display:block; min-width:100%; height:1.6em;"></textarea>
+  </div>
+</section>
+
+<!-- ============ PAGE 30 ============ -->
+<section class="page sec-flow" id="p30" data-tab="Control Flow">
+  <div class="pagehead"><span class="pagenum">PAGE 30</span><span class="kicker">Control Flow</span></div>
+  <h1 class="pagetitle">Control Flow Practice</h1>
+
+  <div class="box predict">
+    <span class="chip">1 - Predict</span>
+    <pre class="code">health = 0
+if health &gt; 0:
+    print("Alive")
+else:
+    print("Game Over")</pre>
+    <p>Output: <input type="text" class="fillin" data-save="q51"></p>
+  </div>
+
+  <div class="box practice">
+    <span class="chip">2 - Find the bug</span>
+    <pre class="code">if score > 10
+    print("You win!")</pre>
+    <p>What's wrong? <textarea class="fillin fillin-block" data-save="q52" style="display:block; min-width:100%; height:1.4em;"></textarea></p>
+  </div>
+
+  <div class="box practice">
+    <span class="chip">3 - Write it</span>
+    <p>Write code: if <code class="inline">coins &gt;= 5</code>, print "Buy a power-up!", otherwise print "Keep collecting."</p>
+    <textarea class="fillin fillin-block" data-save="q7" style="display:block; min-width:100%; height:2.4em;"></textarea>
+  </div>
+
+  <div class="box def">
+    <span class="chip">Vocabulary Check</span>
+    <p>Fill in: a statement that is either True or False is called a ______. Code that only runs when a condition is True lives inside an ______ statement.</p>
+  </div>
+</section>
+
+<!-- ============ PAGE 31 ============ -->
+<section class="page sec-loops" id="p31" data-tab="Loops">
+  <div class="pagehead"><span class="pagenum">PAGE 31</span><span class="kicker">Loops</span></div>
+  <h1 class="pagetitle">What Is a Loop?</h1>
+
+  <div class="box def">
+    <span class="chip">Definition</span>
+    <p>A <b>loop</b> repeats a block of code multiple times, so you don't have to write it over and over by hand. Each repetition is called an <b>iteration</b>.</p>
+  </div>
+
+  <div class="box analogy">
+    <span class="chip">Think Of It Like...</span>
+    <p>A loop is a conveyor belt. The same action happens to every item that comes down the belt, one at a time, until the belt stops.</p>
+  </div>
+
+  <div class="diagram">
+    <pre>       START
+         |
+   REPEAT 4 TIMES <----+
+         |             |
+    DRAW SIDE          |
+         |             |
+       TURN             |
+         |             |
+    done yet? --NO------+
+         |
+        YES
+         |
+        DONE</pre>
+  </div>
+
+  <div class="box use">
+    <span class="chip">Where You'd Use This</span>
+    <p>Drawing all 4 sides of a square. Checking every enemy on screen. Running the whole game over and over until the player quits. Counting down a timer.</p>
+  </div>
+
+  <div class="box remember">
+    <span class="chip">Remember</span>
+    <p>Python has two kinds of loops: <code class="inline">for</code> (repeat a set number of times, or once per item) and <code class="inline">while</code> (repeat as long as a condition stays True). Both coming up next.</p>
+  </div>
+</section>
+
+<!-- ============ PAGE 32 ============ -->
+<section class="page sec-loops" id="p32" data-tab="Loops">
+  <div class="pagehead"><span class="pagenum">PAGE 32</span><span class="kicker">Loops</span></div>
+  <h1 class="pagetitle">for Loops - Every Piece Explained</h1>
+
+  <pre class="code">for i in range(4):
+    print("side drawn")</pre>
+
+  <div class="diagram">
+    <pre>for   i   in   range(4)  :
+ |    |    |       |      |
+ |    |    |       |      +-- colon, same rule as if statements
+ |    |    |       +--------- how many times / what to repeat over
+ |    |    +----------------- keyword meaning "go through each one"
+ |    +---------------------- loop variable - holds the current count
+ +--------------------------- keyword that starts a for loop</pre>
+  </div>
+
+  <table class="chart">
+    <tr><th>Piece</th><th>What it means</th></tr>
+    <tr><td><code class="inline">for</code></td><td>"Repeat the following, once per item."</td></tr>
+    <tr><td><code class="inline">i</code></td><td>A brand-new variable that changes each time through the loop. Could be named anything, but <code class="inline">i</code> is the common convention.</td></tr>
+    <tr><td><code class="inline">in</code></td><td>Connects the loop variable to what it's looping over.</td></tr>
+    <tr><td><code class="inline">range(4)</code></td><td>Produces the sequence 0, 1, 2, 3 - four numbers, so the loop runs 4 times.</td></tr>
+  </table>
+
+  <div class="box predict">
+    <span class="chip">Can You Predict This?</span>
+    <pre class="code">for i in range(3):
+    print(i)</pre>
+    <p>Output (3 lines): <input type="text" class="fillin" data-save="q53"> <input type="text" class="fillin" data-save="q54"> <input type="text" class="fillin" data-save="q55"></p>
+  </div>
+
+  <div class="box mistake">
+    <span class="chip">Common Mistake</span>
+    <p>Assuming <code class="inline">range(4)</code> counts 1,2,3,4. It actually counts <b>0,1,2,3</b> - four numbers starting at zero.</p>
+  </div>
+</section>
+
+<!-- ============ PAGE 33 ============ -->
+<section class="page sec-loops" id="p33" data-tab="Loops">
+  <div class="pagehead"><span class="pagenum">PAGE 33</span><span class="kicker">Loops</span></div>
+  <h1 class="pagetitle">range() - The Full Reference</h1>
+
+  <table class="chart">
+    <tr><th>Call</th><th>Produces</th></tr>
+    <tr><td><code class="inline">range(5)</code></td><td>0, 1, 2, 3, 4 &nbsp;<span style="color:var(--ink-dim)">(stops before 5)</span></td></tr>
+    <tr><td><code class="inline">range(2, 6)</code></td><td>2, 3, 4, 5 &nbsp;<span style="color:var(--ink-dim)">(start, stop before)</span></td></tr>
+    <tr><td><code class="inline">range(0, 10, 2)</code></td><td>0, 2, 4, 6, 8 &nbsp;<span style="color:var(--ink-dim)">(start, stop, step)</span></td></tr>
+  </table>
+
+  <div class="diagram">
+    <pre>range(5)
+0----1----2----3----4----(5 - never reached)
+
+range(2, 6)
+     2----3----4----5----(6 - never reached)
+
+range(0, 10, 2)
+0---------2---------4---------6---------8----(10 - never reached)</pre>
+  </div>
+
+  <div class="box remember">
+    <span class="chip">Remember</span>
+    <p><code class="inline">range()</code> always stops <b>before</b> its final number, never on it. This is the same rule as string indexing being 0-based - Python counts up to, but not including, the end.</p>
+  </div>
+
+  <div class="box use">
+    <span class="chip">Where You'd Use This</span>
+    <p><code class="inline">range(4)</code> for drawing a 4-sided shape. <code class="inline">range(0, 360, 36)</code> for a turtle that spins in 10 evenly-spaced steps around a circle.</p>
+  </div>
+
+  <div class="box practice">
+    <span class="chip">Try It</span>
+    <p>What does <code class="inline">range(1, 5)</code> produce? <input type="text" class="fillin" data-save="q56"></p>
+  </div>
+</section>
+
+<!-- ============ PAGE 34 ============ -->
+<section class="page sec-loops" id="p34" data-tab="Loops">
+  <div class="pagehead"><span class="pagenum">PAGE 34</span><span class="kicker">Loops</span></div>
+  <h1 class="pagetitle">while Loops</h1>
+
+  <div class="box def">
+    <span class="chip">Definition</span>
+    <p>A <code class="inline">while</code> loop repeats <b>as long as</b> its condition stays True. Unlike <code class="inline">for</code>, it doesn't know in advance how many times it'll run.</p>
+  </div>
+
+  <pre class="code">lives = 3
+while lives &gt; 0:
+    print("Still playing")
+    lives -= 1
+print("Game Over")</pre>
+
+  <div class="diagram">
+    <pre>   lives > 0 ?
+   +---+---+
+  YES      NO -> "Game Over"
+   |
+"Still playing"
+   |
+lives -= 1
+   |
+   +---- back to the check</pre>
+  </div>
+
+  <div class="box mistake">
+    <span class="chip">Common Mistake - Infinite Loop</span>
+    <pre class="code">lives = 3
+while lives &gt; 0:
+    print("Still playing")   <span class="c"># lives never changes!</span></pre>
+    <p>If nothing inside the loop ever makes the condition False, it runs forever. Every <code class="inline">while</code> loop needs something that eventually flips its condition.</p>
+  </div>
+
+  <div class="box use">
+    <span class="chip">Where You'd Use This</span>
+    <p><code class="inline">while</code> is perfect for "keep playing until the player loses" or "keep asking until they type a valid answer" - situations where you don't know the exact number of repeats ahead of time.</p>
+  </div>
+
+  <div class="box predict">
+    <span class="chip">Can You Predict This?</span>
+    <pre class="code">n = 3
+while n &gt; 0:
+    print(n)
+    n -= 1</pre>
+    <p>Output (3 lines, in order): <input type="text" class="fillin" data-save="q57"></p>
+  </div>
+</section>
+
+<!-- ============ PAGE 35 ============ -->
+<section class="page sec-loops" id="p35" data-tab="Loops">
+  <div class="pagehead"><span class="pagenum">PAGE 35</span><span class="kicker">Loops</span></div>
+  <h1 class="pagetitle">Loop Mistakes &amp; Practice</h1>
+
+  <div class="box mistake">
+    <span class="chip">Common Mistake</span>
+    <p>Off-by-one: using <code class="inline">range(5)</code> when you actually wanted 5 to be included (it isn't - use <code class="inline">range(1,6)</code> instead).</p>
+  </div>
+  <div class="box mistake">
+    <span class="chip">Common Mistake</span>
+    <p>Forgetting to update the loop variable in a <code class="inline">while</code> loop -> infinite loop.</p>
+  </div>
+  <div class="box mistake">
+    <span class="chip">Common Mistake</span>
+    <p>Indenting code outside the loop by accident, so it runs every iteration instead of once at the end.</p>
+  </div>
+
+  <hr class="rule">
+
+  <div class="box practice">
+    <span class="chip">1</span>
+    <p>How many times does this loop run? <code class="inline">for i in range(5): print("Hi")</code> &nbsp; <input type="text" class="fillin" data-save="q58"></p>
+  </div>
+  <div class="box practice">
+    <span class="chip">2</span>
+    <p>Fix this infinite loop:</p>
+    <pre class="code">count = 0
+while count &lt; 5:
+    print(count)</pre>
+    <p>My fix: <textarea class="fillin fillin-block" data-save="q59" style="display:block; min-width:100%; height:1.4em;"></textarea></p>
+  </div>
+  <div class="box practice">
+    <span class="chip">3</span>
+    <p>Write a <code class="inline">for</code> loop that prints "Enemy spawned" 3 times:</p>
+    <textarea class="fillin fillin-block" data-save="q8" style="display:block; min-width:100%; height:2.2em;"></textarea>
+  </div>
+</section>
+
+<!-- ============ PAGE 36 ============ -->
+<section class="page sec-func" id="p36" data-tab="Functions">
+  <div class="pagehead"><span class="pagenum">PAGE 36</span><span class="kicker">Functions</span></div>
+  <h1 class="pagetitle">What Is a Function?</h1>
+
+  <div class="box def">
+    <span class="chip">Definition</span>
+    <p>A <b>function</b> is a named, reusable chunk of code that performs a task. You write it once, then <b>call</b> it (use it) as many times as you want.</p>
+  </div>
+
+  <div class="box analogy">
+    <span class="chip">Think Of It Like...</span>
+    <p>A function is a machine: you feed something in, the machine does its work out of sight, and something comes out the other end.</p>
+  </div>
+
+  <div class="diagram">
+    <pre>   INPUT
+     |
+     v
++---------------+
+|    FUNCTION    |
+|   does work    |
++---------------+
+     |
+     v
+   OUTPUT</pre>
+  </div>
+
+  <div class="box def">
+    <span class="chip">Definition</span>
+    <p>You've already used functions! <code class="inline">print()</code>, <code class="inline">input()</code>, <code class="inline">len()</code>, <code class="inline">range()</code>, <code class="inline">int()</code> are all built-in functions. Now you'll learn to write your own.</p>
+  </div>
+
+  <div class="box use">
+    <span class="chip">Why Functions Exist</span>
+    <p>Without them, "check if the player collided with an enemy" would need to be retyped everywhere it's checked. With a function, you write <code class="inline">check_collision()</code> once and call it from anywhere.</p>
+  </div>
+</section>
+
+<!-- ============ PAGE 37 ============ -->
+<section class="page sec-func" id="p37" data-tab="Functions">
+  <div class="pagehead"><span class="pagenum">PAGE 37</span><span class="kicker">Functions</span></div>
+  <h1 class="pagetitle">Defining and Calling Functions</h1>
+
+  <h3 class="sub">Defining - writing the machine (does not run it yet!)</h3>
+  <pre class="code">def greet_player():
+    print("Welcome to the game!")</pre>
+
+  <div class="diagram">
+    <pre>def   greet_player  ( )  :
+ |         |         |   |
+ |         |         |   +-- colon - same rule, every time
+ |         |         +------ empty parentheses = takes no info in
+ |         +---------------- the function's name - you choose it
+ +-------------------------- keyword meaning "define a new function"</pre>
+  </div>
+
+  <h3 class="sub">Calling - actually running it</h3>
+  <pre class="code">greet_player()     <span class="c"># NOW it prints "Welcome to the game!"</span></pre>
+
+  <div class="box remember">
+    <span class="chip">Remember</span>
+    <p>Defining a function with <code class="inline">def</code> does <b>not</b> run its code. Python just memorizes the recipe. Nothing happens until you <b>call</b> it by name with parentheses.</p>
+  </div>
+
+  <div class="box mistake">
+    <span class="chip">Common Mistake</span>
+    <pre class="code">def greet_player():
+    print("Welcome!")
+<span class="c"># ...forgot to actually call greet_player() anywhere</span></pre>
+    <p>Result: the program runs with no output. The function was defined but never used.</p>
+  </div>
+</section>
+
+<!-- ============ PAGE 38 ============ -->
+<section class="page sec-func" id="p38" data-tab="Functions">
+  <div class="pagehead"><span class="pagenum">PAGE 38</span><span class="kicker">Functions</span></div>
+  <h1 class="pagetitle">Parameters vs. Arguments</h1>
+
+  <div class="box def">
+    <span class="chip">Definition</span>
+    <p>A <b>parameter</b> is a placeholder name listed in the function's definition. An <b>argument</b> is the actual value you hand it when you call it.</p>
+  </div>
+
+  <div class="diagram">
+    <pre>def greet(name):        <- "name" is the PARAMETER (a placeholder)
+    print(f"Hi, {name}!")
+
+greet("Ava")             <- "Ava" is the ARGUMENT (the real value)</pre>
+  </div>
+
+  <div class="box analogy">
+    <span class="chip">Think Of It Like...</span>
+    <p>Parameter = the blank slot on a form ("Name: ______"). Argument = what you actually write in that blank.</p>
+  </div>
+
+  <pre class="code">def take_damage(amount):
+    print(f"Player takes {amount} damage!")
+
+take_damage(10)
+take_damage(25)</pre>
+
+  <h3 class="sub">Multiple parameters</h3>
+  <pre class="code">def move_player(x, y):
+    print(f"Moving to ({x}, {y})")
+
+move_player(100, 50)</pre>
+
+  <div class="box mistake">
+    <span class="chip">Common Mistake</span>
+    <pre class="code">def take_damage(amount):
+    print(f"Player takes {amount} damage!")
+
+take_damage()   <span class="c"># ERROR - missing required argument</span></pre>
+  </div>
+
+  <div class="box practice">
+    <span class="chip">Try It</span>
+    <p>In <code class="inline">def spawn_enemy(x, y):</code>, name the two parameters: <input type="text" class="fillin" data-save="q60"> and <input type="text" class="fillin" data-save="q61"></p>
+  </div>
+</section>
+
+<!-- ============ PAGE 39 ============ -->
+<section class="page sec-func" id="p39" data-tab="Functions">
+  <div class="pagehead"><span class="pagenum">PAGE 39</span><span class="kicker">Functions</span></div>
+  <h1 class="pagetitle">Return Values</h1>
+
+  <div class="box def">
+    <span class="chip">Definition</span>
+    <p><code class="inline">return</code> sends a value back out of a function so you can store it or use it elsewhere. Not every function needs one - but a function without <code class="inline">return</code> hands back <code class="inline">None</code>.</p>
+  </div>
+
+  <pre class="code">def add_points(score, points):
+    return score + points
+
+new_score = add_points(10, 5)
+print(new_score)     <span class="c"># 15</span></pre>
+
+  <div class="diagram">
+    <pre>   score=10, points=5
+          |
+          v
+   +---------------+
+   |  add_points()  |
+   | score + points |
+   +---------------+
+          |
+          v
+      returns 15
+          |
+          v
+   new_score = 15</pre>
+  </div>
+
+  <div class="box remember">
+    <span class="chip">Remember</span>
+    <p><code class="inline">print()</code> only <i>displays</i> a value - it doesn't hand it back to your code. <code class="inline">return</code> actually gives the value back so you can use it in more math or store it in a variable.</p>
+  </div>
+
+  <div class="box mistake">
+    <span class="chip">Common Mistake</span>
+    <pre class="code">def add_points(score, points):
+    print(score + points)   <span class="c"># prints it, but doesn't return it</span>
+
+new_score = add_points(10, 5)
+print(new_score)             <span class="c"># None!</span></pre>
+  </div>
+
+  <div class="box predict">
+    <span class="chip">Can You Predict This?</span>
+    <pre class="code">def double(n):
+    return n * 2
+
+result = double(4)
+print(result)</pre>
+    <p>Output: <input type="text" class="fillin" data-save="q62"></p>
+  </div>
+</section>
+
+<!-- ============ PAGE 40 ============ -->
+<section class="page sec-func" id="p40" data-tab="Functions">
+  <div class="pagehead"><span class="pagenum">PAGE 40</span><span class="kicker">Functions</span></div>
+  <h1 class="pagetitle">Functions Practice</h1>
+
+  <div class="box practice">
+    <span class="chip">1 - Write it</span>
+    <p>Write a function called <code class="inline">square</code> that takes a number <code class="inline">n</code> and returns <code class="inline">n * n</code>.</p>
+    <textarea class="fillin fillin-block" data-save="q9" style="display:block; min-width:100%; height:2.4em;"></textarea>
+  </div>
+
+  <div class="box predict">
+    <span class="chip">2 - Predict</span>
+    <pre class="code">def is_alive(lives):
+    return lives &gt; 0
+
+print(is_alive(0))
+print(is_alive(3))</pre>
+    <p>Output: <input type="text" class="fillin" data-save="q63"> and <input type="text" class="fillin" data-save="q64"></p>
+  </div>
+
+  <div class="box practice">
+    <span class="chip">3 - Vocabulary Check</span>
+    <p>Match the word to its meaning: <code class="inline">def</code>, parameter, argument, <code class="inline">return</code>, call.</p>
+    <ul class="tight">
+      <li><input type="text" class="fillin" data-save="q65" style="min-width:180px;"> - actually running the function</li>
+      <li><input type="text" class="fillin" data-save="q66" style="min-width:180px;"> - the placeholder name in the definition</li>
+      <li><input type="text" class="fillin" data-save="q67" style="min-width:180px;"> - the real value passed in</li>
+      <li><input type="text" class="fillin" data-save="q68" style="min-width:180px;"> - sends a value back out</li>
+      <li><input type="text" class="fillin" data-save="q69" style="min-width:180px;"> - keyword that defines a function</li>
+    </ul>
+  </div>
+</section>
+
+<!-- ============ PAGE 41 ============ -->
+<section class="page sec-turtle" id="p41" data-tab="Turtle &amp; Visual Art">
+  <div class="pagehead"><span class="pagenum">PAGE 41</span><span class="kicker">Turtle &amp; Visual Art</span></div>
+  <h1 class="pagetitle">Meet Turtle</h1>
+  <p class="lede">Turtle is a drawing library built into Python. Picture a little turtle holding a pen, standing on a blank canvas - you tell it where to move, and it draws a trail behind it.</p>
+
+  <div class="box def">
+    <span class="chip">Definition</span>
+    <p>A <b>library</b> (or <b>module</b>) is a collection of pre-written code someone else built that you can use in your own programs. <code class="inline">import</code> is how you bring one in.</p>
+  </div>
+
+  <pre class="code">import turtle
+
+t = turtle.Turtle()   <span class="c"># create a turtle object named t</span>
+t.forward(100)
+turtle.done()          <span class="c"># keeps the drawing window open</span></pre>
+
+  <div class="diagram">
+    <pre>import turtle : bring in the drawing toolbox
+turtle.Turtle(): create ONE turtle - a real "object" you control
+t.forward(100) : t is your turtle's name - commands go t.command()</pre>
+  </div>
+
+  <div class="box def">
+    <span class="chip">Definition</span>
+    <p>An <b>object</b> is a thing your code creates and controls that has its own properties (position, color, speed) and its own actions (move, turn, draw). Your turtle <code class="inline">t</code> is an object.</p>
+  </div>
+
+  <div class="box remember">
+    <span class="chip">Remember</span>
+    <p>You can name your turtle anything: <code class="inline">t</code>, <code class="inline">artist</code>, <code class="inline">bob</code>. Whatever you name it, every command afterward starts with that name and a dot.</p>
+  </div>
+</section>
+
+<!-- ============ PAGE 42 ============ -->
+<section class="page sec-turtle" id="p42" data-tab="Turtle &amp; Visual Art">
+  <div class="pagehead"><span class="pagenum">PAGE 42</span><span class="kicker">Turtle &amp; Visual Art</span></div>
+  <h1 class="pagetitle">Turtle Command Reference</h1>
+
+  <table class="chart">
+    <tr><th>Command</th><th>What it does</th></tr>
+    <tr><td><code class="inline">t.forward(100)</code></td><td>Move forward 100 pixels, drawing a line.</td></tr>
+    <tr><td><code class="inline">t.backward(100)</code></td><td>Move backward 100 pixels.</td></tr>
+    <tr><td><code class="inline">t.left(90)</code></td><td>Turn left 90 degrees, in place.</td></tr>
+    <tr><td><code class="inline">t.right(90)</code></td><td>Turn right 90 degrees, in place.</td></tr>
+    <tr><td><code class="inline">t.penup()</code></td><td>Lift the pen - move without drawing.</td></tr>
+    <tr><td><code class="inline">t.pendown()</code></td><td>Lower the pen - start drawing again.</td></tr>
+    <tr><td><code class="inline">t.goto(x, y)</code></td><td>Jump straight to a coordinate (see p43).</td></tr>
+    <tr><td><code class="inline">t.circle(50)</code></td><td>Draw a circle with radius 50.</td></tr>
+    <tr><td><code class="inline">t.speed(1-10)</code></td><td>How fast the turtle animates (10 = fast, 0 = instant).</td></tr>
+    <tr><td><code class="inline">t.color("blue")</code></td><td>Set the pen (and fill) color.</td></tr>
+    <tr><td><code class="inline">t.width(3)</code></td><td>Set the pen's line thickness.</td></tr>
+    <tr><td><code class="inline">t.begin_fill()</code></td><td>Start remembering the shape to fill in.</td></tr>
+    <tr><td><code class="inline">t.end_fill()</code></td><td>Fill the shape traced since <code class="inline">begin_fill()</code>.</td></tr>
+  </table>
+
+  <div class="box mistake">
+    <span class="chip">Common Mistake</span>
+    <p>Forgetting <code class="inline">t.penup()</code> before repositioning - you'll draw an unwanted line all the way to your new spot.</p>
+  </div>
+
+  <div class="box practice">
+    <span class="chip">Try It</span>
+    <p>Write the two lines that move the turtle to a new spot <b>without</b> drawing a line, then start drawing again:</p>
+    <textarea class="fillin fillin-block" data-save="q10" style="display:block; min-width:100%; height:2.2em;"></textarea>
+  </div>
+</section>
+
+<!-- ============ PAGE 43 ============ -->
+<section class="page sec-turtle" id="p43" data-tab="Turtle &amp; Visual Art">
+  <div class="pagehead"><span class="pagenum">PAGE 43</span><span class="kicker">Turtle &amp; Visual Art</span></div>
+  <h1 class="pagetitle">The Turtle Coordinate System</h1>
+
+  <div class="box def">
+    <span class="chip">Definition</span>
+    <p>The turtle canvas is a grid with <code class="inline">(0, 0)</code> at the exact <b>center</b> - not the top-left corner like some other tools. <code class="inline">x</code> is left/right, <code class="inline">y</code> is up/down.</p>
+  </div>
+
+  <div class="diagram">
+    <pre>                +Y
+                 ^
+                 |
+       (-100,50) |   (100,50)
+                 |
+     -X ---------0-----------> +X
+                 |        (0,0) is the CENTER
+      (-100,-50) |   (100,-50)
+                 |
+                v
+                -Y</pre>
+  </div>
+
+  <pre class="code">t.goto(0, 0)        <span class="c"># dead center</span>
+t.goto(100, 0)      <span class="c"># 100 pixels right</span>
+t.goto(0, -100)     <span class="c"># 100 pixels down</span>
+t.goto(-50, 50)     <span class="c"># up and to the left</span></pre>
+
+  <div class="box remember">
+    <span class="chip">Remember</span>
+    <p>Positive <code class="inline">y</code> goes <b>up</b> in turtle world - the opposite of screen pixels in most other programs, where y often increases downward. This is the #1 thing that trips people up moving between tools.</p>
+  </div>
+
+  <div class="box use">
+    <span class="chip">Where You'd Use This</span>
+    <p>Placing shapes at exact spots, scattering random "stars" across the screen (paired with p49's <code class="inline">random</code>), building a simple grid-based game board.</p>
+  </div>
+
+  <div class="box practice">
+    <span class="chip">Try It</span>
+    <p>What coordinate is directly below center by 75 pixels? <input type="text" class="fillin" data-save="q70"></p>
+  </div>
+</section>
+
+<!-- ============ PAGE 44 ============ -->
+<section class="page sec-turtle" id="p44" data-tab="Turtle &amp; Visual Art">
+  <div class="pagehead"><span class="pagenum">PAGE 44</span><span class="kicker">Turtle &amp; Visual Art</span></div>
+  <h1 class="pagetitle">Color, Fill &amp; Style</h1>
+
+  <pre class="code">t.color("red")            <span class="c"># pen (and fill) color</span>
+t.width(4)                 <span class="c"># thicker line</span>
+t.speed(6)                 <span class="c"># 1 (slow) to 10 (fast), 0 = instant</span></pre>
+
+  <h3 class="sub">Filling in a shape</h3>
+  <pre class="code">t.color("gold")
+t.begin_fill()
+for i in range(4):
+    t.forward(80)
+    t.right(90)
+t.end_fill()</pre>
+
+  <div class="diagram">
+    <pre>begin_fill()  -->  draw the outline  -->  end_fill()
+    "start                                  "now paint
+   remembering                               everything
+   this shape"                              I traced"</pre>
+  </div>
+
+  <div class="box mistake">
+    <span class="chip">Common Mistake</span>
+    <p>Calling <code class="inline">end_fill()</code> without a matching <code class="inline">begin_fill()</code> - nothing gets filled because Python never started tracking the shape.</p>
+  </div>
+
+  <div class="box mistake">
+    <span class="chip">Common Mistake</span>
+    <p>Not closing the shape (the turtle needs to return to roughly where it started) - the fill can look strange if the outline doesn't connect back up.</p>
+  </div>
+
+  <div class="box use">
+    <span class="chip">Color Name Ideas</span>
+    <div class="badge-list">
+      <span>"red"</span><span>"blue"</span><span>"green"</span><span>"purple"</span><span>"gold"</span><span>"cyan"</span><span>"magenta"</span><span>"black"</span>
+    </div>
+  </div>
+</section>
+
+<!-- ============ PAGE 45 ============ -->
+<section class="page sec-turtle" id="p45" data-tab="Turtle &amp; Visual Art">
+  <div class="pagehead"><span class="pagenum">PAGE 45</span><span class="kicker">Turtle &amp; Visual Art</span></div>
+  <h1 class="pagetitle">Turtle Art - Square &amp; Triangle</h1>
+
+  <table class="chart">
+    <tr><th>Sketch</th><th>Plan</th><th>Code</th><th>Result</th></tr>
+    <tr><td>4 equal sides, 90deg corners</td><td>repeat 4x: forward, turn 90deg</td><td>see below</td><td>a square</td></tr>
+  </table>
+
+  <pre class="code">for i in range(4):
+    t.forward(100)
+    t.right(90)</pre>
+
+  <div class="box analogy">
+    <span class="chip">The Programming Idea</span>
+    <p>Any closed shape made of straight, equal sides is: <b>walk forward, turn by the same angle, repeat</b> - until you've turned all the way around (360deg). A square turns 90deg four times because <code class="inline">4 x 90 = 360</code>.</p>
+  </div>
+
+  <h3 class="sub">Triangle - same idea, different angle</h3>
+  <p>A triangle has 3 sides, so it needs to turn <code class="inline">360 / 3 = 120</code> degrees each time.</p>
+  <pre class="code">for i in range(3):
+    t.forward(100)
+    t.right(120)</pre>
+
+  <div class="box remember">
+    <span class="chip">Remember - The Shape Formula</span>
+    <p>For any regular shape with <code class="inline">n</code> sides: turn angle = <code class="inline">360 / n</code>. This one formula unlocks every shape on the next page.</p>
+  </div>
+
+  <div class="box practice">
+    <span class="chip">Try It</span>
+    <p>What turn angle would draw a 6-sided shape (hexagon)? <input type="text" class="fillin" data-save="q71"></p>
+  </div>
+</section>
+
+<!-- ============ PAGE 46 ============ -->
+<section class="page sec-turtle" id="p46" data-tab="Turtle &amp; Visual Art">
+  <div class="pagehead"><span class="pagenum">PAGE 46</span><span class="kicker">Turtle &amp; Visual Art</span></div>
+  <h1 class="pagetitle">Turtle Art - Polygons &amp; Stars</h1>
+
+  <h3 class="sub">Any polygon, using the 360/n formula</h3>
+  <pre class="code">sides = 8
+angle = 360 / sides
+
+for i in range(sides):
+    t.forward(60)
+    t.right(angle)</pre>
+
+  <div class="box use">
+    <span class="chip">Where the idea came from</span>
+    <p>This is p45's formula turned into <b>variables</b> instead of hard-coded numbers - change <code class="inline">sides</code> to 3, 5, 8, or 20 and the exact same loop draws a completely different shape.</p>
+  </div>
+
+  <h3 class="sub">Stars - turn by more than the polygon angle</h3>
+  <p>A star is a polygon where the turtle turns <b>further</b> than needed to close the shape normally, so the lines cross over themselves.</p>
+  <pre class="code">for i in range(5):
+    t.forward(100)
+    t.right(144)    <span class="c"># a 5-point star</span></pre>
+
+  <div class="diagram">
+    <pre>SKETCH        PLAN                 CODE               RESULT
+  *     ->   5 points, turn    ->   for i in range(5): ->  a star
+             sharply each          t.forward(100)         traced
+             step (144deg)           t.right(144)          on screen</pre>
+  </div>
+
+  <div class="box practice">
+    <span class="chip">Try It</span>
+    <p>Change <code class="inline">sides = 8</code> to <code class="inline">sides = 3</code> in the polygon code above. What shape draws now? <input type="text" class="fillin" data-save="q72"></p>
+  </div>
+</section>
+
+<!-- ============ PAGE 47 ============ -->
+<section class="page sec-turtle" id="p47" data-tab="Turtle &amp; Visual Art">
+  <div class="pagehead"><span class="pagenum">PAGE 47</span><span class="kicker">Turtle &amp; Visual Art</span></div>
+  <h1 class="pagetitle">Turtle Art - Spirals &amp; Flowers</h1>
+
+  <h3 class="sub">Spiral - grow the side length every step</h3>
+  <p>The programming idea: instead of a fixed <code class="inline">forward()</code> distance, let the distance <b>increase</b> a little each time through the loop.</p>
+  <pre class="code">length = 5
+for i in range(100):
+    t.forward(length)
+    t.right(20)
+    length += 2     <span class="c"># each step gets a little longer</span></pre>
+
+  <div class="box analogy">
+    <span class="chip">Think Of It Like...</span>
+    <p>Same square-drawing loop as before, except the "side length" variable is no longer sitting still - it grows every lap.</p>
+  </div>
+
+  <h3 class="sub">Flower - repeat a whole shape, rotating each time</h3>
+  <p>The idea: draw one circle (a petal), turn slightly, draw another, turn again - until you've gone all the way around.</p>
+  <pre class="code">for i in range(10):
+    t.circle(50)
+    t.left(36)     <span class="c"># 360 / 10 petals = 36deg</span></pre>
+
+  <div class="diagram">
+    <pre>SKETCH -> PLAN -> CODE -> RESULT
+ @      loop 10 times:   for i in range(10):   a flower ring
+  spiral   draw a petal,    t.circle(50)         made of 10
+  of        rotate a bit    t.left(36)           overlapping
+  petals                                          circles</pre>
+  </div>
+
+  <div class="box practice">
+    <span class="chip">Try It</span>
+    <p>How would you change the flower code to draw 6 petals instead of 10? (Hint: two numbers need to change together.)</p>
+    <textarea class="fillin fillin-block" data-save="q11" style="display:block; min-width:100%; height:1.6em;"></textarea>
+  </div>
+</section>
+
+<!-- ============ PAGE 48 ============ -->
+<section class="page sec-turtle" id="p48" data-tab="Turtle &amp; Visual Art">
+  <div class="pagehead"><span class="pagenum">PAGE 48</span><span class="kicker">Turtle &amp; Visual Art</span></div>
+  <h1 class="pagetitle">Patterns, Loops of Loops &amp; What's Next</h1>
+
+  <div class="box def">
+    <span class="chip">Definition</span>
+    <p>A <b>nested loop</b> is a loop inside another loop - just like a nested if. The inner loop finishes completely before the outer loop moves to its next step.</p>
+  </div>
+
+  <pre class="code">for shape in range(6):          <span class="c"># draw 6 squares...</span>
+    for side in range(4):        <span class="c"># ...each made of 4 sides</span>
+        t.forward(50)
+        t.right(90)
+    t.right(60)                  <span class="c"># then rotate before the next square</span></pre>
+
+  <div class="diagram">
+    <pre>OUTER LOOP (6 times)
+   |
+   +-- INNER LOOP (4 times) -> draws one square
+   |
+   +-- turn 60deg -> back to top of outer loop</pre>
+  </div>
+
+  <div class="box use">
+    <span class="chip">Where You'd Use This</span>
+    <p>Any repeated pattern - a ring of shapes, a grid of shapes, snowflakes, mandalas. Once you can nest loops, "draw one thing" and "draw a pattern of that thing" become the same skill.</p>
+  </div>
+
+  <div class="box analogy">
+    <span class="chip">Coming Up Next</span>
+    <p>Right now every shape looks identical and predictable. In the next section (Randomness, p49) you'll learn <code class="inline">random.randint()</code> and <code class="inline">random.choice()</code> - so you can make each petal a different color, or scatter shapes randomly across the screen. That's called <b>procedural art</b>: art generated by rules plus a bit of chance.</p>
+  </div>
+
+  <div class="drawbox"><span class="label">sketch your own pattern idea here before you code it</span><textarea class="fillin" data-save="draw2" placeholder="type your notes or describe your sketch here..."></textarea></div>
+</section>
+
+<!-- ============ PAGE 49 ============ -->
+<section class="page sec-random" id="p49" data-tab="Randomness">
+  <div class="pagehead"><span class="pagenum">PAGE 49</span><span class="kicker">Randomness</span></div>
+  <h1 class="pagetitle">The random Module</h1>
+
+  <pre class="code">import random</pre>
+
+  <table class="chart">
+    <tr><th>Function</th><th>What it does</th><th>Example</th></tr>
+    <tr><td><code class="inline">random.randint(a, b)</code></td><td>Random whole number, <b>including</b> both a and b</td><td><code class="inline">random.randint(1, 6)</code> -> dice roll</td></tr>
+    <tr><td><code class="inline">random.choice(list)</code></td><td>Picks one random item from a list</td><td><code class="inline">random.choice(["red","blue"])</code></td></tr>
+  </table>
+
+  <div class="box remember">
+    <span class="chip">Remember</span>
+    <p><code class="inline">randint(1, 6)</code> can actually land on <b>6</b> - both endpoints are included. This is different from <code class="inline">range()</code>, which stops before its last number (p33). Easy to mix up.</p>
+  </div>
+
+  <div class="diagram">
+    <pre>random.randint(1, 6)
+
+  1    2    3    4    5    6
+  +----+----+----+----+----+
+        any one, equally likely</pre>
+  </div>
+
+  <pre class="code">roll = random.randint(1, 6)
+print(f"You rolled a {roll}")
+
+color = random.choice(["red", "blue", "green"])
+t.color(color)</pre>
+
+  <div class="box use">
+    <span class="chip">Where You'd Use This</span>
+    <p>Dice and card games, enemy spawn positions, random colors or shapes in art, "critical hit" chance, shuffling which question comes next.</p>
+  </div>
+
+  <div class="box predict">
+    <span class="chip">Can You Predict This?</span>
+    <p><code class="inline">random.randint(1, 3)</code> - list every possible result: <input type="text" class="fillin" data-save="q73"></p>
+  </div>
+</section>
+
+<!-- ============ PAGE 50 ============ -->
+<section class="page sec-random" id="p50" data-tab="Randomness">
+  <div class="pagehead"><span class="pagenum">PAGE 50</span><span class="kicker">Randomness</span></div>
+  <h1 class="pagetitle">Randomness in Games &amp; Art</h1>
+
+  <h3 class="sub">A guessing game, using random</h3>
+  <pre class="code">import random
+secret = random.randint(1, 20)
+guess = int(input("Guess 1-20: "))
+
+if guess == secret:
+    print("You got it!")
+else:
+    print(f"Nope, it was {secret}")</pre>
+
+  <h3 class="sub">Random positions for turtle art</h3>
+  <pre class="code">import random, turtle
+t = turtle.Turtle()
+t.penup()
+
+for i in range(20):
+    x = random.randint(-200, 200)
+    y = random.randint(-200, 200)
+    t.goto(x, y)
+    t.dot(10, random.choice(["red","blue","gold"]))</pre>
+
+  <div class="box use">
+    <span class="chip">Connects To</span>
+    <div class="badge-list">
+      <span>enemy spawn locations</span><span>dice</span><span>random colors</span><span>random shapes</span><span>procedural art</span><span>shuffled questions</span>
+    </div>
+  </div>
+
+  <div class="box practice">
+    <span class="chip">Try It</span>
+    <p>Write one line that picks a random number of sides between 3 and 10, for a random polygon: <textarea class="fillin fillin-block" data-save="q74" style="display:block; min-width:100%; height:1.6em;"></textarea></p>
+  </div>
+
+  <div class="box mistake">
+    <span class="chip">Common Mistake</span>
+    <p>Forgetting <code class="inline">import random</code> at the top - every use of <code class="inline">random.anything()</code> needs it, just once, at the start of the file.</p>
+  </div>
+</section>
+
+<!-- ============ PAGE 51 ============ -->
+<section class="page sec-lists" id="p51" data-tab="Lists">
+  <div class="pagehead"><span class="pagenum">PAGE 51</span><span class="kicker">Lists</span></div>
+  <h1 class="pagetitle">What Is a List?</h1>
+
+  <div class="box def">
+    <span class="chip">Definition</span>
+    <p>A <b>list</b> stores multiple values together, in order, inside square brackets <code class="inline">[ ]</code>, separated by commas.</p>
+  </div>
+
+  <div class="box analogy">
+    <span class="chip">Think Of It Like...</span>
+    <p>A list is a row of numbered lockers. Each locker holds one item, and every locker has a number (its index) so you can find it again.</p>
+  </div>
+
+  <pre class="code">colors = ["red", "blue", "green"]
+inventory = ["sword", "shield", "potion"]
+scores = [88, 92, 75]</pre>
+
+  <div class="diagram">
+    <pre>colors = ["red", "blue", "green"]
+
+INDEX        VALUE
+  0          "red"
+  1          "blue"
+  2          "green"</pre>
+  </div>
+
+  <div class="box remember">
+    <span class="chip">Remember</span>
+    <p>Lists use the exact same index rules as strings (p14): counting starts at 0, and <code class="inline">list[-1]</code> is the last item.</p>
+  </div>
+
+  <div class="box use">
+    <span class="chip">Where You'd Use This</span>
+    <p><b>Games:</b> inventory, enemies on screen, level names, high scores. <b>Visual coding:</b> a palette of colors to pick from, a set of shapes to cycle through.</p>
+  </div>
+
+  <div class="box practice">
+    <span class="chip">Try It</span>
+    <p>Make a list called <code class="inline">weapons</code> with 3 weapon names of your choice:</p>
+    <textarea class="fillin fillin-block" data-save="q12" style="display:block; min-width:100%; height:1.6em;"></textarea>
+  </div>
+</section>
+
+<!-- ============ PAGE 52 ============ -->
+<section class="page sec-lists" id="p52" data-tab="Lists">
+  <div class="pagehead"><span class="pagenum">PAGE 52</span><span class="kicker">Lists</span></div>
+  <h1 class="pagetitle">List Indexing &amp; Changing Items</h1>
+
+  <pre class="code">colors = ["red", "blue", "green"]
+print(colors[0])      <span class="c"># red</span>
+print(colors[-1])     <span class="c"># green (last item)</span></pre>
+
+  <h3 class="sub">Changing an item in place</h3>
+  <pre class="code">colors[1] = "purple"
+print(colors)     <span class="c"># ['red', 'purple', 'green']</span></pre>
+
+  <div class="diagram">
+    <pre>BEFORE                          AFTER  colors[1] = "purple"
+0: red                          0: red
+1: blue    ---- overwritten --> 1: purple
+2: green                        2: green</pre>
+  </div>
+
+  <div class="box remember">
+    <span class="chip">Remember</span>
+    <p>Unlike strings, lists are <b>changeable (mutable)</b> - you can overwrite one item without rebuilding the whole list.</p>
+  </div>
+
+  <div class="box mistake">
+    <span class="chip">Common Mistake</span>
+    <pre class="code">colors = ["red", "blue", "green"]
+print(colors[3])     <span class="c"># ERROR - no index 3, only 0,1,2 exist</span></pre>
+  </div>
+
+  <div class="box predict">
+    <span class="chip">Can You Predict This?</span>
+    <pre class="code">items = ["sword", "shield"]
+items[0] = "axe"
+print(items)</pre>
+    <p>Output: <input type="text" class="fillin" data-save="q75"></p>
+  </div>
+</section>
+
+<!-- ============ PAGE 53 ============ -->
+<section class="page sec-lists" id="p53" data-tab="Lists">
+  <div class="pagehead"><span class="pagenum">PAGE 53</span><span class="kicker">Lists</span></div>
+  <h1 class="pagetitle">List Methods - append, remove, len</h1>
+
+  <table class="chart">
+    <tr><th>Method</th><th>What it does</th><th>Example</th></tr>
+    <tr><td><code class="inline">.append(x)</code></td><td>Adds <code class="inline">x</code> to the end</td><td><code class="inline">inventory.append("key")</code></td></tr>
+    <tr><td><code class="inline">.remove(x)</code></td><td>Removes the first <code class="inline">x</code> it finds</td><td><code class="inline">inventory.remove("key")</code></td></tr>
+    <tr><td><code class="inline">len(list)</code></td><td>How many items are in it</td><td><code class="inline">len(inventory)</code></td></tr>
+  </table>
+
+  <pre class="code">inventory = ["sword", "shield"]
+inventory.append("potion")
+print(inventory)     <span class="c"># ['sword', 'shield', 'potion']</span>
+
+inventory.remove("shield")
+print(inventory)     <span class="c"># ['sword', 'potion']</span>
+
+print(len(inventory))     <span class="c"># 2</span></pre>
+
+  <div class="diagram">
+    <pre>["sword","shield"] --append("potion")--> ["sword","shield","potion"]
+["sword","shield","potion"] --remove("shield")--> ["sword","potion"]</pre>
+  </div>
+
+  <div class="box mistake">
+    <span class="chip">Common Mistake</span>
+    <pre class="code">inventory.remove("bow")   <span class="c"># ERROR if "bow" isn't in the list</span></pre>
+    <p><code class="inline">.remove()</code> needs an exact match that actually exists in the list.</p>
+  </div>
+
+  <div class="box practice">
+    <span class="chip">Try It</span>
+    <p>Starting from <code class="inline">enemies = ["goblin", "orc"]</code>, write the line to add <code class="inline">"dragon"</code>:</p>
+    <textarea class="fillin fillin-block" data-save="q13" style="display:block; min-width:100%; height:1.6em;"></textarea>
+  </div>
+</section>
+
+<!-- ============ PAGE 54 ============ -->
+<section class="page sec-lists" id="p54" data-tab="Lists">
+  <div class="pagehead"><span class="pagenum">PAGE 54</span><span class="kicker">Lists</span></div>
+  <h1 class="pagetitle">Lists in Games</h1>
+
+  <div class="box use">
+    <span class="chip">Common Uses</span>
+    <div class="badge-list">
+      <span>inventory</span><span>enemies on screen</span><span>level names</span><span>high scores</span><span>weapon options</span><span>dialogue lines</span>
+    </div>
+  </div>
+
+  <h3 class="sub">Looping over a list - combine with p32!</h3>
+  <pre class="code">enemies = ["goblin", "orc", "dragon"]
+for enemy in enemies:
+    print(f"A wild {enemy} appears!")</pre>
+
+  <div class="box remember">
+    <span class="chip">Remember</span>
+    <p><code class="inline">for item in list:</code> gives you each <b>value</b> directly, one at a time - no index math needed. This is the most common way lists and loops team up.</p>
+  </div>
+
+  <div class="box predict">
+    <span class="chip">Can You Predict This?</span>
+    <pre class="code">scores = [70, 85, 90]
+total = 0
+for s in scores:
+    total += s
+print(total)</pre>
+    <p>Output: <input type="text" class="fillin" data-save="q76"></p>
+  </div>
+
+  <div class="box practice">
+    <span class="chip">Try It</span>
+    <p>Write a loop that prints every item in <code class="inline">high_scores = [120, 98, 150]</code> on its own line:</p>
+    <textarea class="fillin fillin-block" data-save="q14" style="display:block; min-width:100%; height:2.2em;"></textarea>
+  </div>
+</section>
+
+<!-- ============ PAGE 55 ============ -->
+<section class="page sec-game" id="p55" data-tab="Game Logic">
+  <div class="pagehead"><span class="pagenum">PAGE 55</span><span class="kicker">Game Logic</span></div>
+  <h1 class="pagetitle">Game State - The Scoreboard Idea</h1>
+
+  <div class="box def">
+    <span class="chip">Definition</span>
+    <p><b>State</b> is a snapshot of every important value in your game <i>right now</i> - score, lives, position, level. Nearly all game code exists to read or change the state.</p>
+  </div>
+
+  <div class="box analogy">
+    <span class="chip">Think Of It Like...</span>
+    <p>Game state is a scoreboard at a sports game. At any moment, you can glance at it and know exactly what's going on - you don't need to remember the whole match.</p>
+  </div>
+
+  <div class="diagram">
+    <pre>+----------------------+
+|   GAME STATE          |
++----------------------+
+|  SCORE     = 100      |
+|  LIVES     = 3        |
+|  LEVEL     = 2        |
+|  PLAYER_X  = 50       |
+|  PLAYER_Y  = 100      |
++----------------------+</pre>
+  </div>
+
+  <pre class="code">score = 0
+lives = 3
+level = 1
+player_x = 0
+player_y = 0</pre>
+
+  <div class="box remember">
+    <span class="chip">Remember</span>
+    <p>Every one of these is just a plain variable you already know how to use. "Game state" isn't a new Python feature - it's a <i>name</i> for the group of variables that describe your game.</p>
+  </div>
+
+  <div class="box use">
+    <span class="chip">Where You'd Use This</span>
+    <p>Deciding whether the game is over (<code class="inline">lives &lt;= 0</code>), deciding what to draw (<code class="inline">player_x, player_y</code>), deciding difficulty (<code class="inline">level</code>).</p>
+  </div>
+</section>
+
+<!-- ============ PAGE 56 ============ -->
+<section class="page sec-game" id="p56" data-tab="Game Logic">
+  <div class="pagehead"><span class="pagenum">PAGE 56</span><span class="kicker">Game Logic</span></div>
+  <h1 class="pagetitle">The Game Loop</h1>
+
+  <div class="box def">
+    <span class="chip">Definition</span>
+    <p>The <b>game loop</b> is a <code class="inline">while</code> loop that runs over and over, many times a second, checking input and redrawing the screen - it's why a game feels alive instead of like a single line of output.</p>
+  </div>
+
+  <div class="diagram">
+    <pre>          +---------------------+
+          |                     |
+          v                     |
+        INPUT                   |
+          |                     |
+          v                     |
+        UPDATE                  |
+          |                     |
+          v                     |
+     CHECK RULES                |
+          |                     |
+          v                     |
+        OUTPUT                  |
+          |                     |
+          +---- REPEAT ---------+</pre>
+  </div>
+
+  <table class="chart">
+    <tr><th>Step</th><th>Means</th></tr>
+    <tr><td>Input</td><td>Read what the player did (key press, typed guess).</td></tr>
+    <tr><td>Update</td><td>Change the state based on that input (move player, subtract a life).</td></tr>
+    <tr><td>Check Rules</td><td>Has anyone won or lost? Did something collide?</td></tr>
+    <tr><td>Output</td><td>Show the result - print text, redraw the screen.</td></tr>
+    <tr><td>Repeat</td><td>Go back to Input, unless the game has ended.</td></tr>
+  </table>
+
+  <pre class="code">lives = 3
+while lives &gt; 0:
+    guess = input("Guess a number 1-10: ")   <span class="c"># INPUT</span>
+    guess = int(guess)
+    if guess != 7:                            <span class="c"># CHECK RULES</span>
+        lives -= 1                              <span class="c"># UPDATE</span>
+        print(f"Wrong! Lives left: {lives}")   <span class="c"># OUTPUT</span>
+    else:
+        print("You win!")
+        break</pre>
+
+  <div class="box remember">
+    <span class="chip">Remember</span>
+    <p><code class="inline">break</code> immediately exits the loop - useful for ending a game loop the instant someone wins, without waiting for the condition to naturally go False.</p>
+  </div>
+</section>
+
+<!-- ============ PAGE 57 ============ -->
+<section class="page sec-game" id="p57" data-tab="Game Logic">
+  <div class="pagehead"><span class="pagenum">PAGE 57</span><span class="kicker">Game Logic</span></div>
+  <h1 class="pagetitle">Game Vocabulary I</h1>
+
+  <div class="box def"><span class="chip">Definition</span><p><b>Player</b> - the character or object the person using the game directly controls.</p></div>
+  <div class="box def"><span class="chip">Definition</span><p><b>Enemy</b> - a character controlled by the game (not the player) that opposes the player.</p></div>
+  <div class="box def"><span class="chip">Definition</span><p><b>Obstacle</b> - something in the environment that blocks or challenges the player, but doesn't act on its own like an enemy does.</p></div>
+  <div class="box def"><span class="chip">Definition</span><p><b>Score</b> - a number tracking how well the player is doing, usually meant to go up.</p></div>
+  <div class="box def"><span class="chip">Definition</span><p><b>Lives</b> - how many times the player can fail before the game ends.</p></div>
+  <div class="box def"><span class="chip">Definition</span><p><b>Level</b> - a distinct stage or section of the game, usually increasing in difficulty.</p></div>
+
+  <div class="box use">
+    <span class="chip">In Code</span>
+    <pre class="code">player_x, player_y = 0, 0
+enemy_x, enemy_y = 100, 100
+score = 0
+lives = 3
+level = 1</pre>
+  </div>
+
+  <div class="box practice">
+    <span class="chip">Try It</span>
+    <p>Name one obstacle and one enemy idea for a game you'd want to build: <input type="text" class="fillin" data-save="q77"> / <input type="text" class="fillin" data-save="q78"></p>
+  </div>
+</section>
+
+<!-- ============ PAGE 58 ============ -->
+<section class="page sec-game" id="p58" data-tab="Game Logic">
+  <div class="pagehead"><span class="pagenum">PAGE 58</span><span class="kicker">Game Logic</span></div>
+  <h1 class="pagetitle">Game Vocabulary II</h1>
+
+  <div class="box def"><span class="chip">Definition</span><p><b>Win condition</b> - the exact rule that ends the game in the player's favor. Example: <code class="inline">score &gt;= 100</code>.</p></div>
+  <div class="box def"><span class="chip">Definition</span><p><b>Lose condition</b> - the exact rule that ends the game against the player. Example: <code class="inline">lives &lt;= 0</code>.</p></div>
+  <div class="box def"><span class="chip">Definition</span><p><b>Collision</b> - when two objects occupy the same space, usually triggering an effect (damage, pickup, bounce).</p></div>
+  <div class="box def"><span class="chip">Definition</span><p><b>Timer</b> - a value that counts down (or up) over time, often ending the game or an event when it hits zero.</p></div>
+  <div class="box def"><span class="chip">Definition</span><p><b>Power-up</b> - a temporary or permanent boost the player can collect (extra life, speed boost).</p></div>
+  <div class="box def"><span class="chip">Definition</span><p><b>Inventory</b> - a list of items the player is currently holding (see p51's lists!).</p></div>
+  <div class="box def"><span class="chip">Definition</span><p><b>Random event</b> - something that happens with an element of chance rather than a guaranteed rule (p49's <code class="inline">random</code>).</p></div>
+
+  <pre class="code">if score &gt;= 100:
+    print("You win!")
+elif lives &lt;= 0:
+    print("Game Over")</pre>
+
+  <div class="box remember">
+    <span class="chip">Remember</span>
+    <p>A collision, in beginner Python games, is usually just an <code class="inline">if</code> statement comparing positions - e.g. <code class="inline">if player_x == enemy_x and player_y == enemy_y:</code>.</p>
+  </div>
+</section>
+
+<!-- ============ PAGE 59 ============ -->
+<section class="page sec-game" id="p59" data-tab="Game Logic">
+  <div class="pagehead"><span class="pagenum">PAGE 59</span><span class="kicker">Game Logic</span></div>
+  <h1 class="pagetitle">Tracing a Mini Game</h1>
+  <p class="lede">Walk through this dice game line by line, tracking every variable as it changes - a skill you'll use constantly (see p64).</p>
+
+  <pre class="code">import random
+
+target = random.randint(1, 6)
+attempts = 0
+won = False
+
+while attempts &lt; 3 and not won:
+    guess = int(input("Guess 1-6: "))
+    attempts += 1
+    if guess == target:
+        won = True
+        print("You won in", attempts, "tries!")
+    else:
+        print("Try again.")
+
+if not won:
+    print(f"Out of tries. It was {target}.")</pre>
+
+  <table class="chart">
+    <tr><th>Line</th><th>What it does</th></tr>
+    <tr><td><code class="inline">target = random.randint(1,6)</code></td><td>Pick the secret number once, before the loop.</td></tr>
+    <tr><td><code class="inline">while attempts &lt; 3 and not won:</code></td><td>Keep looping until either 3 tries are used <b>or</b> they've won.</td></tr>
+    <tr><td><code class="inline">attempts += 1</code></td><td>Count this guess, every time through the loop.</td></tr>
+    <tr><td><code class="inline">won = True</code></td><td>Flip the flag so the <code class="inline">while</code> condition goes False next check.</td></tr>
+  </table>
+
+  <div class="box practice">
+    <span class="chip">Try It</span>
+    <p>If <code class="inline">target = 4</code> and the player guesses 2, then 4 - trace it: what prints, and after how many attempts?</p>
+    <textarea class="fillin fillin-block" data-save="q15" style="display:block; min-width:100%; height:1.6em;"></textarea>
+  </div>
+</section>
+
+<!-- ============ PAGE 60 ============ -->
+<section class="page sec-debug" id="p60" data-tab="Debugging">
+  <div class="pagehead"><span class="pagenum">PAGE 60</span><span class="kicker">Debugging</span></div>
+  <h1 class="pagetitle">Types of Bugs</h1>
+
+  <div class="box def">
+    <span class="chip">Definition</span>
+    <p>A <b>bug</b> is anything wrong with your code - it doesn't run, or it runs but does the wrong thing. <b>Debugging</b> is the process of finding and fixing bugs.</p>
+  </div>
+
+  <table class="chart">
+    <tr><th>Type</th><th>Meaning</th><th>Example</th></tr>
+    <tr><td>Syntax Error</td><td>Broken grammar - Python can't even start running it.</td><td>Missing colon, mismatched quotes.</td></tr>
+    <tr><td>Runtime Error</td><td>The code runs, then crashes partway through.</td><td>Dividing by zero, index out of range.</td></tr>
+    <tr><td>Logic Error</td><td>The code runs fine with no crash, but gives the <b>wrong</b> answer.</td><td>Using <code class="inline">+</code> when you meant <code class="inline">-</code>.</td></tr>
+  </table>
+
+  <div class="box analogy">
+    <span class="chip">Think Of It Like...</span>
+    <p>Syntax error = a sentence with no verb - grammatically broken. Runtime error = a car that starts, then stalls on the highway. Logic error = a car that runs perfectly... straight into the wrong city.</p>
+  </div>
+
+  <div class="box remember">
+    <span class="chip">Remember</span>
+    <p>Logic errors are the hardest to catch, because Python never complains - the program looks like it's working. This is exactly why "Can You Predict This?" practice matters.</p>
+  </div>
+</section>
+
+<!-- ============ PAGE 61 ============ -->
+<section class="page sec-debug" id="p61" data-tab="Debugging">
+  <div class="pagehead"><span class="pagenum">PAGE 61</span><span class="kicker">Debugging</span></div>
+  <h1 class="pagetitle">The Bug Detective Method</h1>
+
+  <div class="diagram">
+    <pre>              BUG
+               |
+               v
+         READ THE ERROR
+               |
+               v
+          FIND THE LINE
+               |
+               v
+   WHAT DID I EXPECT TO HAPPEN?
+               |
+               v
+    WHAT ACTUALLY HAPPENED?
+               |
+               v
+       MAKE A HYPOTHESIS
+               |
+               v
+       CHANGE ONE THING
+               |
+               v
+             TEST
+               |
+        +------+------+
+      FIXED         STILL BROKEN
+        |                |
+      DONE      back to "make a hypothesis"</pre>
+  </div>
+
+  <div class="box remember">
+    <span class="chip">Remember</span>
+    <p>Change <b>one thing</b> at a time. If you change five things and it works, you'll never know which change actually fixed it - and you might have added a new bug.</p>
+  </div>
+
+  <div class="box use">
+    <span class="chip">Reading a Python error</span>
+    <p>Python errors usually tell you the exact <b>line number</b> and a short description at the bottom. Always read the <i>last</i> line of the error first - that's the actual problem.</p>
+  </div>
+
+  <div class="box practice">
+    <span class="chip">Try It</span>
+    <p>Next time you hit a real error, write the line number and error message here, then work through the steps above:</p>
+    <textarea class="fillin fillin-block" data-save="q16" style="display:block; min-width:100%; height:1.6em;"></textarea>
+  </div>
+</section>
+
+<!-- ============ PAGE 62 ============ -->
+<section class="page sec-debug" id="p62" data-tab="Debugging">
+  <div class="pagehead"><span class="pagenum">PAGE 62</span><span class="kicker">Debugging</span></div>
+  <h1 class="pagetitle">The Error Museum</h1>
+  <p class="lede">Every beginner walks past these exhibits. Recognize the shape of the mistake, not just the exact code.</p>
+
+  <table class="chart">
+    <tr><th>Exhibit</th><th>Broken</th><th>Fixed</th></tr>
+    <tr><td>Missing colon</td><td><code class="inline">if score &gt; 10</code></td><td><code class="inline">if score &gt; 10:</code></td></tr>
+    <tr><td>Missing parenthesis</td><td><code class="inline">print("hi"</code></td><td><code class="inline">print("hi")</code></td></tr>
+    <tr><td>Bad indentation</td><td><code class="inline">if x:<br>print(x)</code></td><td><code class="inline">if x:<br>&nbsp;&nbsp;&nbsp;&nbsp;print(x)</code></td></tr>
+    <tr><td>Misspelled variable</td><td><code class="inline">print(scroe)</code></td><td><code class="inline">print(score)</code></td></tr>
+    <tr><td>Wrong data type</td><td><code class="inline">"5" + 5</code></td><td><code class="inline">int("5") + 5</code></td></tr>
+    <tr><td>Forgetting quotes</td><td><code class="inline">print(hello)</code></td><td><code class="inline">print("hello")</code></td></tr>
+    <tr><td>Infinite loop</td><td><code class="inline">while True:<br>&nbsp;&nbsp;&nbsp;&nbsp;print("hi")</code></td><td>add something that eventually breaks the loop</td></tr>
+    <tr><td>Wrong condition</td><td><code class="inline">if lives = 0:</code></td><td><code class="inline">if lives == 0:</code></td></tr>
+  </table>
+
+  <div class="box mistake">
+    <span class="chip">The single most common one</span>
+    <p><code class="inline">NameError: name 'scroe' is not defined</code> - 90% of the time, this means a typo in a variable name. Check spelling and capitalization first.</p>
+  </div>
+
+  <div class="box practice">
+    <span class="chip">Try It</span>
+    <p>Add one bug you personally made this week to this museum, and its fix: <textarea class="fillin fillin-block" data-save="q79" style="display:block; min-width:100%; height:1.6em;"></textarea></p>
+  </div>
+</section>
+
+<!-- ============ PAGE 63 ============ -->
+<section class="page sec-debug" id="p63" data-tab="Debugging">
+  <div class="pagehead"><span class="pagenum">PAGE 63</span><span class="kicker">Debugging</span></div>
+  <h1 class="pagetitle">Debugging Checklist</h1>
+  <p class="lede">Work through these, in order, before asking for help.</p>
+
+  <div class="box practice">
+    <span class="chip">Checklist</span>
+    <ul class="tight">
+      <li>[ ] Did I read the <b>last line</b> of the error message?</li>
+      <li>[ ] Did I find the exact <b>line number</b> it points to?</li>
+      <li>[ ] Are all my colons, quotes, and parentheses matched up?</li>
+      <li>[ ] Is my indentation consistent (same number of spaces)?</li>
+      <li>[ ] Did I spell every variable name exactly the same everywhere?</li>
+      <li>[ ] Am I mixing up <code class="inline">=</code> and <code class="inline">==</code>?</li>
+      <li>[ ] Is a string sneaking in where I need a number (or vice versa)?</li>
+      <li>[ ] If it's a loop - does something inside it actually change the condition?</li>
+      <li>[ ] Did I add a <code class="inline">print()</code> statement to check a variable's value mid-program?</li>
+    </ul>
+  </div>
+
+  <div class="box remember">
+    <span class="chip">Remember</span>
+    <p>Sprinkling <code class="inline">print(variable_name)</code> throughout your code to see what's actually stored is not "cheating" - it's one of the most-used real debugging techniques there is.</p>
+  </div>
+
+  <div class="drawbox"><span class="label">space for your own recurring mistakes - build your personal list here over the next 5 weeks</span><textarea class="fillin" data-save="draw3" placeholder="type your notes or describe your sketch here..."></textarea></div>
+</section>
+
+<!-- ============ PAGE 64 ============ -->
+<section class="page sec-read" id="p64" data-tab="Code Reading">
+  <div class="pagehead"><span class="pagenum">PAGE 64</span><span class="kicker">Code Reading</span></div>
+  <h1 class="pagetitle">How To Read Code - Tracing Variables</h1>
+
+  <div class="box def">
+    <span class="chip">Definition</span>
+    <p><b>Tracing</b> means running code in your head (or on paper), line by line, writing down what every variable equals after each line. It's the single best skill for both debugging and predicting output.</p>
+  </div>
+
+  <p>Trace this by hand - fill in the table as you go:</p>
+  <pre class="code">x = 5
+y = 2
+x = x + y
+y = x - y
+print(x, y)</pre>
+
+  <table class="chart">
+    <tr><th>Line</th><th>x</th><th>y</th></tr>
+    <tr><td><code class="inline">x = 5</code></td><td>5</td><td> - </td></tr>
+    <tr><td><code class="inline">y = 2</code></td><td>5</td><td>2</td></tr>
+    <tr><td><code class="inline">x = x + y</code></td><td><input type="text" class="fillin" data-save="q80"></td><td>2</td></tr>
+    <tr><td><code class="inline">y = x - y</code></td><td><input type="text" class="fillin" data-save="q81"></td><td><input type="text" class="fillin" data-save="q82"></td></tr>
+  </table>
+
+  <div class="box remember">
+    <span class="chip">Remember</span>
+    <p>Read the <b>right side</b> of an <code class="inline">=</code> first - Python always fully calculates it before storing anything.</p>
+  </div>
+
+  <div class="box use">
+    <span class="chip">When To Trace</span>
+    <p>Whenever output doesn't match what you expected. Draw a mini table like the one above, one column per variable, one row per line - the wrong value usually reveals itself immediately.</p>
+  </div>
+</section>
+
+<!-- ============ PAGE 65 ============ -->
+<section class="page sec-read" id="p65" data-tab="Code Reading">
+  <div class="pagehead"><span class="pagenum">PAGE 65</span><span class="kicker">Code Reading</span></div>
+  <h1 class="pagetitle">What Does This Code Do?</h1>
+
+  <div class="box predict">
+    <span class="chip">1</span>
+    <pre class="code">total = 0
+for i in range(1, 6):
+    total += i
+print(total)</pre>
+    <p>Identify: the loop, the condition (if any), the final value of <code class="inline">total</code>. <input type="text" class="fillin" data-save="q83"></p>
+  </div>
+
+  <div class="box predict">
+    <span class="chip">2</span>
+    <pre class="code">def mystery(n):
+    if n % 2 == 0:
+        return "even"
+    else:
+        return "odd"
+
+print(mystery(7))</pre>
+    <p>Identify: the function name, its parameter, what it returns for 7. <input type="text" class="fillin" data-save="q84"></p>
+  </div>
+
+  <div class="box predict">
+    <span class="chip">3</span>
+    <pre class="code">items = ["a", "b", "c"]
+for i in range(len(items)):
+    print(i, items[i])</pre>
+    <p>Identify: how many times it loops, and what prints on the first line. <input type="text" class="fillin" data-save="q85"></p>
+  </div>
+
+  <div class="box remember">
+    <span class="chip">Remember</span>
+    <p>Before predicting output, first identify the <i>shape</i> of the code: is there a loop? A condition? A function? Naming the parts out loud makes tracing the values much easier.</p>
+  </div>
+</section>
+
+<!-- ============ PAGE 66 ============ -->
+<section class="page sec-proj" id="p66" data-tab="Project Design">
+  <div class="pagehead"><span class="pagenum">PAGE 66</span><span class="kicker">Project Design</span></div>
+  <h1 class="pagetitle">The Game Design Blueprint</h1>
+  <p class="lede">Before writing a single line of a new project, fill this page out. It will save you from the "I don't know what to build next" wall.</p>
+
+  <div class="box practice"><span class="chip">Game Idea</span><p>In one sentence, what is this game?</p><textarea class="fillin fillin-block" data-save="q17" style="display:block; min-width:100%; height:1.4em;"></textarea></div>
+  <div class="box practice"><span class="chip">Game Rules</span><p>What can the player do? What isn't allowed?</p><textarea class="fillin fillin-block" data-save="q18" style="display:block; min-width:100%; height:1.4em;"></textarea></div>
+  <div class="box practice"><span class="chip">Controls</span><p>What input does the player give? (typed text, key presses)</p><textarea class="fillin fillin-block" data-save="q19" style="display:block; min-width:100%; height:1.4em;"></textarea></div>
+  <div class="box practice"><span class="chip">Win Condition</span><p><textarea class="fillin fillin-block" data-save="q86" style="display:block; min-width:100%; height:1.4em;"></textarea></p></div>
+  <div class="box practice"><span class="chip">Lose Condition</span><p><textarea class="fillin fillin-block" data-save="q87" style="display:block; min-width:100%; height:1.4em;"></textarea></p></div>
+</section>
+
+<!-- ============ PAGE 67 ============ -->
+<section class="page sec-proj" id="p67" data-tab="Project Design">
+  <div class="pagehead"><span class="pagenum">PAGE 67</span><span class="kicker">Project Design</span></div>
+  <h1 class="pagetitle">Project Planning Worksheet</h1>
+
+  <div class="box practice"><span class="chip">Variables I'll need (game state)</span><textarea class="fillin fillin-block" data-save="q20" style="display:block; min-width:100%; height:1.8em;"></textarea></div>
+  <div class="box practice"><span class="chip">Functions I'll need</span><p>List actions that will repeat: <textarea class="fillin fillin-block" data-save="q88" style="display:block; min-width:100%; height:1.8em;"></textarea></p></div>
+  <div class="box practice"><span class="chip">Visuals</span><p>Turtle shapes, colors, layout: <textarea class="fillin fillin-block" data-save="q89" style="display:block; min-width:100%; height:1.4em;"></textarea></p></div>
+  <div class="box practice"><span class="chip">Levels</span><p>Does difficulty change over time? How?</p><textarea class="fillin fillin-block" data-save="q21" style="display:block; min-width:100%; height:1.4em;"></textarea></div>
+  <div class="box practice"><span class="chip">Sounds (conceptually)</span><p>If this had sound, what would play and when?</p><textarea class="fillin fillin-block" data-save="q22" style="display:block; min-width:100%; height:1.4em;"></textarea></div>
+  <div class="box practice"><span class="chip">Testing</span><p>What's the very first small piece you'll build and test, before anything else?</p><textarea class="fillin fillin-block" data-save="q23" style="display:block; min-width:100%; height:1.4em;"></textarea></div>
+
+  <div class="box remember">
+    <span class="chip">Remember</span>
+    <p>Build the smallest working version first - one shape on screen, one working input - <i>then</i> add features. A game that does one thing is more valuable than five broken half-built ideas.</p>
+  </div>
+</section>
+
+<!-- ============ PAGE 68 ============ -->
+<section class="page sec-tool" id="p68" data-tab="Toolbox">
+  <div class="pagehead"><span class="pagenum">PAGE 68</span><span class="kicker">Toolbox</span></div>
+  <h1 class="pagetitle">Python Symbols Cheat Sheet</h1>
+
+  <table class="chart">
+    <tr><th>Symbol</th><th>Name</th><th>Meaning</th></tr>
+    <tr><td><code class="inline">+</code></td><td>Plus</td><td>Addition, or joining strings</td></tr>
+    <tr><td><code class="inline">-</code></td><td>Minus</td><td>Subtraction</td></tr>
+    <tr><td><code class="inline">*</code></td><td>Star</td><td>Multiplication, or repeating strings</td></tr>
+    <tr><td><code class="inline">/</code></td><td>Slash</td><td>Division (always returns a float)</td></tr>
+    <tr><td><code class="inline">//</code></td><td>Double slash</td><td>Floor division (rounds down)</td></tr>
+    <tr><td><code class="inline">%</code></td><td>Percent / Modulo</td><td>Remainder after division</td></tr>
+    <tr><td><code class="inline">**</code></td><td>Double star</td><td>Exponent (power)</td></tr>
+    <tr><td><code class="inline">=</code></td><td>Equals</td><td>Assignment - store a value</td></tr>
+    <tr><td><code class="inline">==</code></td><td>Double equals</td><td>Comparison - are these equal?</td></tr>
+    <tr><td><code class="inline">!=</code></td><td>Not-equals</td><td>Comparison - are these different?</td></tr>
+    <tr><td><code class="inline">&gt;</code> <code class="inline">&lt;</code></td><td>Greater / Less than</td><td>Comparison</td></tr>
+    <tr><td><code class="inline">&gt;=</code> <code class="inline">&lt;=</code></td><td>Greater / Less or equal</td><td>Comparison</td></tr>
+    <tr><td><code class="inline">+=</code> <code class="inline">-=</code> <code class="inline">*=</code> <code class="inline">/=</code></td><td>Compound assignment</td><td>Update a variable using itself</td></tr>
+    <tr><td><code class="inline">[ ]</code></td><td>Square brackets</td><td>Indexing, or defining a list</td></tr>
+    <tr><td><code class="inline">( )</code></td><td>Parentheses</td><td>Calling a function, grouping math</td></tr>
+    <tr><td><code class="inline">:</code></td><td>Colon</td><td>Starts a new indented block (if/for/while/def)</td></tr>
+    <tr><td><code class="inline">#</code></td><td>Hash</td><td>Starts a comment - Python ignores the rest of the line</td></tr>
+  </table>
+</section>
+
+<!-- ============ PAGE 69 ============ -->
+<section class="page sec-tool" id="p69" data-tab="Toolbox">
+  <div class="pagehead"><span class="pagenum">PAGE 69</span><span class="kicker">Toolbox</span></div>
+  <h1 class="pagetitle">Python Vocabulary Dictionary - A to L</h1>
+
+  <table class="chart">
+    <tr><th>Term</th><th>Definition</th></tr>
+    <tr><td>Algorithm</td><td>A step-by-step set of instructions for solving a problem.</td></tr>
+    <tr><td>Argument</td><td>The real value handed to a function when you call it.</td></tr>
+    <tr><td>Assignment</td><td>Storing a value into a variable, using <code class="inline">=</code>.</td></tr>
+    <tr><td>Boolean</td><td>A True/False value.</td></tr>
+    <tr><td>Bug</td><td>Anything wrong with your code.</td></tr>
+    <tr><td>Code</td><td>Written instructions for a computer.</td></tr>
+    <tr><td>Condition</td><td>A statement that evaluates to True or False.</td></tr>
+    <tr><td>Data</td><td>Information a program stores and works with.</td></tr>
+    <tr><td>Data type</td><td>The category a value belongs to (str, int, float, bool...).</td></tr>
+    <tr><td>Debugging</td><td>Finding and fixing bugs.</td></tr>
+    <tr><td>Event</td><td>Something that happens that a program can react to (a key press, a click).</td></tr>
+    <tr><td>Expression</td><td>Any bit of code that produces a value, like <code class="inline">5 + 2</code>.</td></tr>
+    <tr><td>Float</td><td>A decimal number.</td></tr>
+    <tr><td>Function</td><td>A named, reusable block of code.</td></tr>
+    <tr><td>Game loop</td><td>The repeating cycle of input -> update -> check -> output.</td></tr>
+    <tr><td>Index</td><td>The position number of an item in a string or list, starting at 0.</td></tr>
+    <tr><td>Input</td><td>Information going into a program, often from the user.</td></tr>
+    <tr><td>Integer</td><td>A whole number.</td></tr>
+    <tr><td>Iteration</td><td>One single repetition of a loop.</td></tr>
+    <tr><td>List</td><td>An ordered collection of values in square brackets.</td></tr>
+  </table>
+</section>
+
+<!-- ============ PAGE 70 ============ -->
+<section class="page sec-tool" id="p70" data-tab="Toolbox">
+  <div class="pagehead"><span class="pagenum">PAGE 70</span><span class="kicker">Toolbox</span></div>
+  <h1 class="pagetitle">Python Vocabulary Dictionary - M to Z</h1>
+
+  <table class="chart">
+    <tr><th>Term</th><th>Definition</th></tr>
+    <tr><td>Method</td><td>An action attached to a value, called with a dot: <code class="inline">value.method()</code>.</td></tr>
+    <tr><td>Module</td><td>A file of pre-written code you can import and use (same idea as a library).</td></tr>
+    <tr><td>Object</td><td>A thing your code creates that has its own properties and actions.</td></tr>
+    <tr><td>Operator</td><td>A symbol that performs an operation, like <code class="inline">+</code> or <code class="inline">==</code>.</td></tr>
+    <tr><td>Output</td><td>Information a program produces, often shown on screen.</td></tr>
+    <tr><td>Parameter</td><td>The placeholder name in a function's definition.</td></tr>
+    <tr><td>Program</td><td>A complete set of code that does something useful.</td></tr>
+    <tr><td>Programming</td><td>The act of writing code to build a program.</td></tr>
+    <tr><td>Return</td><td>Sending a value back out of a function.</td></tr>
+    <tr><td>State</td><td>The current values of all the important variables in a program.</td></tr>
+    <tr><td>String</td><td>Text, wrapped in quotation marks.</td></tr>
+    <tr><td>Syntax</td><td>The exact spelling and grammar rules of a language.</td></tr>
+    <tr><td>Value</td><td>A single piece of data - a number, some text, a Boolean.</td></tr>
+    <tr><td>Variable</td><td>A named box that stores a value.</td></tr>
+  </table>
+
+  <div class="box practice">
+    <span class="chip">Try It</span>
+    <p>Pick 3 words above you still find confusing. Flip back to the page that explains each one and re-read it right now: <input type="text" class="fillin" data-save="q90"> <input type="text" class="fillin" data-save="q91"> <input type="text" class="fillin" data-save="q92"></p>
+  </div>
+</section>
+
+<!-- ============ PAGE 71 ============ -->
+<section class="page sec-tool" id="p71" data-tab="Toolbox">
+  <div class="pagehead"><span class="pagenum">PAGE 71</span><span class="kicker">Toolbox</span></div>
+  <h1 class="pagetitle">"When Do I Use This?"</h1>
+  <p class="lede">Stuck on what tool to reach for? Start here.</p>
+
+  <table class="chart">
+    <tr><th>I need to...</th><th>Reach for...</th><th>Page</th></tr>
+    <tr><td>Display something</td><td><code class="inline">print()</code></td><td>p5</td></tr>
+    <tr><td>Ask the user something</td><td><code class="inline">input()</code></td><td>p7</td></tr>
+    <tr><td>Store information</td><td>a variable</td><td>p9</td></tr>
+    <tr><td>Turn typed text into a number</td><td><code class="inline">int()</code> / <code class="inline">float()</code></td><td>p22</td></tr>
+    <tr><td>Repeat something a set number of times</td><td><code class="inline">for</code> loop</td><td>p32</td></tr>
+    <tr><td>Repeat until a condition changes</td><td><code class="inline">while</code> loop</td><td>p34</td></tr>
+    <tr><td>Make a decision</td><td><code class="inline">if</code> / <code class="inline">elif</code> / <code class="inline">else</code></td><td>p27</td></tr>
+    <tr><td>Reuse the same code in many places</td><td>a function</td><td>p36</td></tr>
+    <tr><td>Store many values together</td><td>a list</td><td>p51</td></tr>
+    <tr><td>Generate unpredictability</td><td><code class="inline">random</code></td><td>p49</td></tr>
+    <tr><td>Draw something on screen</td><td><code class="inline">turtle</code></td><td>p41</td></tr>
+    <tr><td>Track score, lives, or position</td><td>game state variables</td><td>p55</td></tr>
+    <tr><td>Something isn't working</td><td>the Bug Detective</td><td>p61</td></tr>
+  </table>
+</section>
+
+<!-- ============ PAGE 72 ============ -->
+<section class="page sec-tool" id="p72" data-tab="Toolbox">
+  <div class="pagehead"><span class="pagenum">PAGE 72</span><span class="kicker">Toolbox</span></div>
+  <h1 class="pagetitle">Visual Analogies - The Complete Set</h1>
+
+  <table class="chart">
+    <tr><th>Concept</th><th>Analogy</th></tr>
+    <tr><td>Variable</td><td>A labeled storage box</td></tr>
+    <tr><td>Function</td><td>A machine - input goes in, output comes out</td></tr>
+    <tr><td>Loop</td><td>A conveyor belt, repeating the same action</td></tr>
+    <tr><td>if statement</td><td>A decision gate - one path or the other</td></tr>
+    <tr><td>List</td><td>A row of numbered lockers</td></tr>
+    <tr><td>String</td><td>Beads threaded on a string, each one a character</td></tr>
+    <tr><td>Integer</td><td>A whole-number counter - score, lives</td></tr>
+    <tr><td>Float</td><td>A measuring cup - captures the in-between amounts</td></tr>
+    <tr><td>Boolean</td><td>A light switch - only ON or OFF</td></tr>
+    <tr><td>Debugging</td><td>Detective work - evidence, hypothesis, test</td></tr>
+    <tr><td>Game state</td><td>A scoreboard - a snapshot of everything happening now</td></tr>
+    <tr><td>f-string</td><td>A fill-in-the-blank sentence</td></tr>
+  </table>
+
+  <div class="box remember">
+    <span class="chip">Remember</span>
+    <p>When a concept feels abstract, come back to its analogy first. The code will make more sense once the picture in your head is solid.</p>
+  </div>
+</section>
+
+<!-- ============ PAGE 73 ============ -->
+<section class="page sec-tool" id="p73" data-tab="Toolbox">
+  <div class="pagehead"><span class="pagenum">PAGE 73</span><span class="kicker">Toolbox</span></div>
+  <h1 class="pagetitle">Capstone Project Checklist</h1>
+  <p class="lede">You've made it through the whole guide. Time to build something real and put every page to work.</p>
+
+  <div class="box practice">
+    <span class="chip">Before You Start</span>
+    <ul class="tight">
+      <li>[ ] Filled out the Game Design Blueprint (p66) and Planning Worksheet (p67)</li>
+      <li>[ ] Know your win condition and lose condition, in plain English</li>
+      <li>[ ] Listed the game-state variables you'll need</li>
+    </ul>
+  </div>
+  <div class="box practice">
+    <span class="chip">While Building</span>
+    <ul class="tight">
+      <li>[ ] Built the smallest working version first, then added features one at a time</li>
+      <li>[ ] Used functions for anything that repeats</li>
+      <li>[ ] Used a loop for the main game loop, and <code class="inline">if</code> for the rules</li>
+      <li>[ ] Tested after every small change, not just at the end</li>
+    </ul>
+  </div>
+  <div class="box practice">
+    <span class="chip">When Stuck</span>
+    <ul class="tight">
+      <li>[ ] Ran the Debugging Checklist (p63)</li>
+      <li>[ ] Traced the variables by hand (p64)</li>
+      <li>[ ] Flipped back to the relevant page instead of guessing</li>
+    </ul>
+  </div>
+
+  <div class="stamp" style="margin-top:10px;">Notebook Complete - Keep Going</div>
+  <p style="margin-top:14px; color:var(--ink-dim); font-size:13px;">This notebook isn't finished when the pages run out - add new pages as you learn new things. Leave room at the back for whatever comes next.</p>
+</section>
+
+</main>
+<script>
+  document.getElementById('navchips').addEventListener('click', function(e){
+    var a = e.target.closest('a');
+    if(!a) return;
+    e.preventDefault();
+    var el = document.querySelector(a.getAttribute('href'));
+    if(el) el.scrollIntoView({behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth', block:'start'});
+  });
+
+  (function(){
+    var PREFIX = 'introToPythonWorkbook.';
+    function keyFor(el){ return PREFIX + el.dataset.save; }
+    function load(){
+      document.querySelectorAll('[data-save]').forEach(function(el){
+        try{
+          var v = localStorage.getItem(keyFor(el));
+          if(v !== null) el.value = v;
+        }catch(err){}
+      });
+    }
+    document.addEventListener('input', function(e){
+      var el = e.target;
+      if(!el.dataset || !el.dataset.save) return;
+      try{ localStorage.setItem(keyFor(el), el.value); }catch(err){}
+    });
+    try{ load(); }catch(err){}
+  })();
+</script>
